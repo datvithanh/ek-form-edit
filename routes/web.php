@@ -22,6 +22,8 @@ Route::get('/', function (Request $request) {
 
 Route::get('/post/{postId}/edit', function ($postId, Request $request) {
     $post = DB::table('all_posts')->where('id', $postId)->first();
+    if($post == null)
+        return view('404');
     $data['post'] = $post;
 
     return view('welcome', $data);
