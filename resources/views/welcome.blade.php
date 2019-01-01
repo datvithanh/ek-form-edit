@@ -88,7 +88,7 @@
             de_bai: de_bai,
             dap_an: dap_an
         }
-        axios.put("{{url('/api/post/')}}" + id, data)
+        axios.put("{{url('/api/post/')}}" + "/" + id, data)
             .then(function(response){
                 toastr.success("Edit Thành công");
                 window.location.reload();
