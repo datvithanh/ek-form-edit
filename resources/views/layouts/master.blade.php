@@ -16,7 +16,7 @@
     <link rel="dns-prefetch" href="https://fonts.htgstatic.com">
     <!-- Styles -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="/assets/css/toastr.min.css" rel="stylesheet">
+    <link href="{{url('/assets/css/toastr.min.css')}}" rel="stylesheet">
 
 </head>
 <body>
@@ -48,12 +48,12 @@
     </div>
 
 </body>
-<script src="/assets/js/jquery-3.2.1.min.js" type="text/javascript"></script>
-<script src="/assets/js/jquery-ui-1.12.1.custom.min.js" type="text/javascript"></script>
-<script src="/assets/js/tether.min.js" type="text/javascript"></script>
-<script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="/assets/js/axios.min.js"></script>
-<script src="/assets/js/toastr.min.js"></script>
+<script src="{{url('/assets/js/jquery-3.2.1.min.js')}}" type="text/javascript"></script>
+<script src="{{url('/assets/js/jquery-ui-1.12.1.custom.min.js')}}" type="text/javascript"></script>
+<script src="{{url('/assets/js/tether.min.js')}}" type="text/javascript"></script>
+<script src="{{url('/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
+<script src="{{url('/assets/js/axios.min.js')}}"></script>
+<script src="{{url('/assets/js/toastr.min.js')}}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
 <!-- <script src="/assets/js/mathml.js?config=TeX-MML-AM_CHTML"></script> -->
 

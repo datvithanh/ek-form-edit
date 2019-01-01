@@ -9,7 +9,7 @@
         <div class="card-body" style="padding-bottom: 0px">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 20px">
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 20%">Id của tài liệu:</label>
+                    <label style="width: 20%">ItemID:</label>
                     <input class="form-control" style="display: inline-block; width:35%" id="post-id" type="text"
                         placeholder="Post's id" value="{{$post->id}}"/>
                     <button class="btn btn-success" style="display: inline-block;" id="btn-change-id">Go</button>
