@@ -54,6 +54,8 @@
 <script src="/assets/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="/assets/js/axios.min.js"></script>
 <script src="/assets/js/toastr.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+<script src="/assets/js/mathml.js"></script>
 
 @stack('scripts')
 </html>

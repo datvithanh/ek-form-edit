@@ -9,26 +9,35 @@
         <div class="card-body" style="padding-bottom: 0px">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 20px">
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 25%">Id của tài liệu:</label>
-                    <input class="form-control" style="display: inline-block; width:45%" id="post-id" type="text"
+                    <label style="width: 20%">Id của tài liệu:</label>
+                    <input class="form-control" style="display: inline-block; width:35%" id="post-id" type="text"
                         placeholder="Post's id" value="{{$post->id}}"/>
                     <button class="btn btn-success" style="display: inline-block;" id="btn-change-id">Go</button>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 25%">Id hỏi đáp của tài liệu:</label>
-                    <!-- <input class="form-control" style="display: inline-block; width:45%" id="post-hoi-dap-id" type="text"
-                        placeholder="Post's hoi dap id" value="{{$post->hoi_dap_id}}"/> -->
+                    <label style="width: 20%">Id hỏi đáp của tài liệu:</label>
                     <p style="display: inline-block;">{{$post->hoi_dap_id}}</p>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 25%">Câu hỏi:</label>
-                    <textarea class="form-control" style="display: inline-block; width:45%" id="post-question" rows="7"
+                    <label style="width: 20%">Câu hỏi:</label>
+                    <div style="display:inline-block; width:75%">
+
+                    <textarea class="form-control" style="width:100%" id="post-question" rows="7"
                         placeholder="Post's question in HTML">{{$post->de_bai}}</textarea>
+                    <p style="width: 100%" id="post-question-display">
+                        {!!$post->de_bai!!}
+                    </p>
+                    </div>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 25%">Đáp án:</label>
-                    <textarea class="form-control" style="display: inline-block; width:45%" id="post-answer" rows="7"
+                    <label style="width: 20%">Đáp án:</label>
+                    <div style="display:inline-block; width:75%">
+                    <textarea class="form-control" style="width:100%" id="post-answer" rows="7"
                         placeholder="Post's answer">{{$post->dap_an}}</textarea>
+                    <p style="width: 100%" id="post-answer-display">
+                        {!!$post->dap_an!!}
+                    </p>
+                    </div>
                 </div>
                 <button class="btn btn-success" style="width: 30%; margin: 10px; padding: 15px;" id="btn-edit">Lưu
                 </button>
@@ -45,6 +54,17 @@
         if(prev_id != post_id)
             window.location = "/post/" + post_id + "/edit";
     });
+
+    $('#post-question').bind('input propertychange', function() {
+        $("#post-question-display")[0].innerHTML = $("#post-question").val();
+        // mathMlRender();
+    });
+
+    $('#post-answer').bind('input propertychange', function() {
+        $("#post-answer-display")[0].innerHTML = $("#post-answer").val();
+        // mathMlRender();
+    });
+
     $("#btn-edit").click(function(){
         let id = $("#post-id").val();
         let de_bai = $("#post-question").val();
