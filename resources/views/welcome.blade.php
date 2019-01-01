@@ -19,7 +19,7 @@
                     <p style="display: inline-block;">{{$post->hoi_dap_id}}</p>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 20%">Câu hỏi:</label>
+                    <label style="width: 20%">Đề bài:</label>
                     <div style="display:inline-block; width:75%">
 
                     <textarea class="form-control" style="width:100%" id="post-question" rows="7"
