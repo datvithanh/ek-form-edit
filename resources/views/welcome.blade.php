@@ -19,22 +19,22 @@
                     <p style="display: inline-block;">{{$post->hoi_dap_id}}</p>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 20%">Đề bài:</label>
+                    <label style="vertical-align: top; width: 20%">Đề bài:</label>
                     <div style="display:inline-block; width:75%">
 
                     <textarea class="form-control" style="width:100%" id="post-question" rows="7"
                         placeholder="Post's question in HTML">{{$post->de_bai}}</textarea>
-                    <p style="width: 100%" id="post-question-display">
+                    <p style="margin-top:20px; width: 100%" id="post-question-display">
                         {!!$post->de_bai!!}
                     </p>
                     </div>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 20%">Đáp án:</label>
+                    <label style="vertical-align: top; width: 20%">Đáp án:</label>
                     <div style="display:inline-block; width:75%">
                     <textarea class="form-control" style="width:100%" id="post-answer" rows="7"
                         placeholder="Post's answer">{{$post->dap_an}}</textarea>
-                    <p style="width: 100%" id="post-answer-display">
+                    <p style="margin-top:20px; width: 100%" id="post-answer-display">
                         {!!$post->dap_an!!}
                     </p>
                     </div>
