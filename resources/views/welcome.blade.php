@@ -9,13 +9,13 @@
         <div class="card-body" style="padding-bottom: 0px">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 20px">
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 20%">ItemID:</label>
+                    <label style="width: 20%">ID:</label>
                     <input class="form-control" style="display: inline-block; width:35%" id="post-id" type="text"
                         placeholder="Post's id" value="{{$post->id}}"/>
                     <button class="btn btn-success" style="display: inline-block;" id="btn-change-id">Go</button>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 20%">Id hỏi đáp của tài liệu:</label>
+                    <label style="width: 20%">ItemID:</label>
                     <p style="display: inline-block;">{{$post->hoi_dap_id}}</p>
                 </div>
                 <div class="form-group" style="width: 100%;">
