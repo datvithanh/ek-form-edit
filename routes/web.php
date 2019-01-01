@@ -17,8 +17,10 @@ use App\PostHistory;
  */
 
 Route::get('/', function (Request $request) {
-    $post_id = DB::table('all_posts')->first()->id;
-    return redirect('/' . 'post' . '/' . $post_id . '/edit');
+    $post = DB::table('all_posts')->first();
+    if($post == null)
+        return view('404');
+    return redirect('/' . 'post' . '/' . $post->id . '/edit');
 });
 
 Route::get('/post/{postId}/edit', function ($postId, Request $request) {
