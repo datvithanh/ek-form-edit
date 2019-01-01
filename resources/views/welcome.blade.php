@@ -49,6 +49,16 @@
 @push('scripts')
 <script>
     let prev_id = "{{$post->id}}";
+
+    function renderMathJax()
+    {
+        window.MathJax = {};
+        var head= document.getElementsByTagName('head')[0];
+        var script= document.createElement('script');
+        script.src= 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML&cachebuster='+ new Date().getTime();
+        head.appendChild(script);
+    }
+
     $("#btn-change-id").click(function(){
         let post_id = $("#post-id").val();
         if(prev_id != post_id)
@@ -57,12 +67,12 @@
 
     $('#post-question').bind('input propertychange', function() {
         $("#post-question-display")[0].innerHTML = $("#post-question").val();
-        // mathMlRender();
+        renderMathJax();
     });
 
     $('#post-answer').bind('input propertychange', function() {
         $("#post-answer-display")[0].innerHTML = $("#post-answer").val();
-        // mathMlRender();
+        renderMathJax();
     });
 
     $("#btn-edit").click(function(){

@@ -15,6 +15,15 @@ use App\PostHistory;
 | contains the "web" middleware group. Now create something great!
 |
  */
+function endlToBr(&$text) {
+    $text = str_replace('\nolimits','\zolimits',$text);
+    $text = str_replace('\neq','\zeq',$text);
+    $text = str_replace('\ne','\ze',$text);
+    $text = str_replace('\n','<br/>',$text);
+    $text = str_replace('\zolimits','\nolimits',$text);
+    $text = str_replace('\zeq','\neq',$text);
+    $text = str_replace('\ze','\ne',$text);
+}
 
 Route::get('/', function (Request $request) {
     $post = DB::table('all_posts')->first();
@@ -27,6 +36,10 @@ Route::get('/post/{postId}/edit', function ($postId, Request $request) {
     $post = DB::table('all_posts')->where('id', $postId)->first();
     if($post == null)
         return view('404');
+    
+    endlToBr($post->de_bai);
+    endlToBr($post->dap_an);
+
     $data['post'] = $post;
 
     return view('welcome', $data);
