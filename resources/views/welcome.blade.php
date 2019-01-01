@@ -62,7 +62,7 @@
     $("#btn-change-id").click(function(){
         let post_id = $("#post-id").val();
         if(prev_id != post_id)
-            window.location = "/post/" + post_id + "/edit";
+            window.location = "{{url('/post')}}/" + post_id + "/edit";
     });
 
     $('#post-question').bind('input propertychange', function() {
