@@ -47,8 +47,18 @@
 </div>
 @endsection
 @push('scripts')
+<script src="{{url('/assets/ckeditor/ckeditor.js')}}"></script>
+<script src="{{url('/assets/ckeditor/adapters/jquery.js')}}"></script>
 <script>
+    // console.log(CKEDITOR.config);
+    // CKEDITOR.replace( 'editor', {
+    //     extraPlugins: 'easyimage',
+    //     cloudServices_tokenUrl: 'https://example.com/cs-token-endpoint',
+    //     cloudServices_uploadUrl: 'https://your-organization-id.cke-cs.com/easyimage/upload/'
+    // });
     let prev_id = "{{$post->id}}";
+    $('#post-question').ckeditor();
+    $('#post-answer').ckeditor();
 
     function renderMathJax()
     {
