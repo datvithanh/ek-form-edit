@@ -35,4 +35,10 @@ CKEDITOR.editorConfig = function( config ) {
 	
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+
+	config.entities = false;
+
+	config.entities_greek = false;
+
+	config.mathJaxLib = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML';
 };

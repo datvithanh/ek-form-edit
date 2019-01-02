@@ -42,9 +42,10 @@ class WebController extends Controller
 
         $this->endlToBr($post->de_bai);
         $this->endlToBr($post->dap_an);
-        $post->dap_an = str_replace("\(", '$$', $post->dap_an);
-        $post->dap_an = str_replace("\)", '$$', $post->dap_an);
-        // dd('/\(/');
+        $post->de_bai = str_replace("\(", '<span class="math-tex">\(', $post->de_bai);
+        $post->de_bai = str_replace("\)", '\)</span>', $post->de_bai);
+        $post->dap_an = str_replace("\(", '<span class="math-tex">\(', $post->dap_an);
+        $post->dap_an = str_replace("\)", '\)</span>', $post->dap_an);
         $data['post'] = $post;
 
         return view('welcome', $data);
@@ -53,13 +54,18 @@ class WebController extends Controller
     public function editPostApi($postId, Request $request)
     {
         $post = Post::find($postId);
-        $post->de_bai = $request->de_bai;
-        $post->dap_an = $request->dap_an;
-        $post->save();
         $history = new PostHistory();
         $history->post_id = $post->id;
-        $history->content = json_encode($post);
+        $history->content = json_encode($post, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_LINE_TERMINATORS);
         $history->save();
+
+        $post->de_bai = $request->de_bai;
+        $post->dap_an = $request->dap_an;
+        $post->de_bai = str_replace('<span class="math-tex">\(', "\(", $post->de_bai);
+        $post->de_bai = str_replace('\)</span>', "\)", $post->de_bai);
+        $post->dap_an = str_replace('<span class="math-tex">\(', "\(", $post->dap_an);
+        $post->dap_an = str_replace('\)</span>', "\)", $post->dap_an);
+        $post->save();
         return ['message' => 'success'];
     }
 

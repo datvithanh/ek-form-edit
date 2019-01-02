@@ -9,34 +9,34 @@
         <div class="card-body" style="padding-bottom: 0px">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 20px">
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 20%">ID:</label>
+                    <label style="width: 15%">ID:</label>
                     <input class="form-control" style="display: inline-block; width:35%" id="post-id" type="text"
                         placeholder="Post's id" value="{{$post->id}}"/>
                     <button class="btn btn-success" style="display: inline-block;" id="btn-change-id">Go</button>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 20%">ItemID:</label>
+                    <label style="width: 15%">ItemID:</label>
                     <p style="display: inline-block;">{{$post->hoi_dap_id}}</p>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="vertical-align: top; width: 20%">Đề bài:</label>
-                    <div style="display:inline-block; width:75%">
+                    <label style="vertical-align: top; width: 15%">Đề bài:</label>
+                    <div style="display:inline-block; width:80%">
 
-                    <textarea class="form-control" style="width:100%" id="post-question" rows="7"
+                    <textarea class="form-control" style="width:100%" id="postquestion" rows="7"
                         placeholder="Post's question in HTML">{{$post->de_bai}}</textarea>
-                    <p style="margin-top:20px; width: 100%" id="post-question-display">
+                    <!-- <p style="margin-top:20px; width: 100%" id="postquestion-display">
                         {!!$post->de_bai!!}
-                    </p>
+                    </p> -->
                     </div>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="vertical-align: top; width: 20%">Đáp án:</label>
-                    <div style="display:inline-block; width:75%">
-                    <textarea class="form-control" style="width:100%" id="post-answer" rows="7"
+                    <label style="vertical-align: top; width: 15%">Đáp án:</label>
+                    <div style="display:inline-block; width:80%">
+                    <textarea class="form-control" style="width:100%" id="postanswer" rows="7"
                         placeholder="Post's answer">{{$post->dap_an}}</textarea>
-                    <p style="margin-top:20px; width: 100%" id="post-answer-display">
+                    <!-- <p style="margin-top:20px; width: 100%" id="postanswer-display">
                         {!!$post->dap_an!!}
-                    </p>
+                    </p> -->
                     </div>
                 </div>
                 <button class="btn btn-success" style="width: 30%; margin: 10px; padding: 15px;" id="btn-edit">Lưu
@@ -47,7 +47,7 @@
 </div>
 @endsection
 @push('scripts')
-<script src="{{url('/assets/ckeditor/ckeditor.js')}}"></script>
+<script src="{{url('/assets/ckeditor/ckeditor.js')}}" charset="utf-8"></script>
 <script src="{{url('/assets/ckeditor/adapters/jquery.js')}}"></script>
 <script>
     // console.log(CKEDITOR.config);
@@ -57,9 +57,10 @@
     //     cloudServices_uploadUrl: 'https://your-organization-id.cke-cs.com/easyimage/upload/'
     // });
     let prev_id = "{{$post->id}}";
-    $('#post-question').ckeditor();
-    $('#post-answer').ckeditor();
-
+    // $('#postquestion').ckeditor();
+    // $('#postanswer').ckeditor();
+    CKEDITOR.replace('postquestion', { extraPlugins: 'mathjax', height: '250px', allowedContent: true});
+    CKEDITOR.replace('postanswer', { extraPlugins: 'mathjax', height: '250px', allowedContent: true});
     function renderMathJax()
     {
         window.MathJax = {};
@@ -75,20 +76,26 @@
             window.location = "{{url('/post')}}/" + post_id + "/edit";
     });
 
-    $('#post-question').bind('input propertychange', function() {
-        $("#post-question-display")[0].innerHTML = $("#post-question").val();
-        renderMathJax();
+    $('#postquestion').bind('input propertychange', function() {
+        console.log('asdjkdk');
+        $("#postquestion-display")[0].innerHTML = $("#postquestion").val();
+        // renderMathJax();
     });
 
-    $('#post-answer').bind('input propertychange', function() {
-        $("#post-answer-display")[0].innerHTML = $("#post-answer").val();
-        renderMathJax();
+    $('#postanswer').bind('input propertychange', function() {
+        $("#postanswer-display")[0].innerHTML = $("#postanswer").val();
+        // renderMathJax();
     });
 
     $("#btn-edit").click(function(){
         let id = $("#post-id").val();
-        let de_bai = $("#post-question").val();
-        let dap_an = $("#post-answer").val();
+        $("#btn-edit").prop('disabled', true);
+        // let de_bai = CKEDITOR.instances.postquestion.document.getBody().getText();
+        // let dap_an = CKEDITOR.instances.postanswer.document.getBody().getText();
+        let de_bai = CKEDITOR.instances.postquestion.getData();
+        let dap_an = CKEDITOR.instances.postanswer.getData();
+        de_bai = de_bai.substr(3, de_bai.length-8);
+        dap_an = dap_an.substr(3, dap_an.length-8);
         if(id == "" || de_bai == "" || dap_an == "" || de_bai.trim() == "" || dap_an.trim() == "" || id.trim() == "")
         {
             toastr.error("Thiếu thông tin");

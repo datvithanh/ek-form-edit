@@ -1,0 +1,1 @@
+{"result":{"text":"square root of X plus 1 end root\n"},"status":"ok"}

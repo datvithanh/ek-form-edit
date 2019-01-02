@@ -1,0 +1,1 @@
+{"result":{"text":"square root of fraction numerator x plus 12 over denominator y minus 10 end fraction end root"},"status":"ok"}
