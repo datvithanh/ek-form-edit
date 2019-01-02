@@ -59,8 +59,8 @@
     let prev_id = "{{$post->id}}";
     // $('#postquestion').ckeditor();
     // $('#postanswer').ckeditor();
-    CKEDITOR.replace('postquestion', { extraPlugins: 'mathjax', height: '250px', allowedContent: true});
-    CKEDITOR.replace('postanswer', { extraPlugins: 'mathjax', height: '250px', allowedContent: true});
+    CKEDITOR.replace('postquestion', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
+    CKEDITOR.replace('postanswer', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
     function renderMathJax()
     {
         window.MathJax = {};
