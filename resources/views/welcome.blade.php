@@ -16,7 +16,9 @@
                 </div>
                 <div class="form-group" style="width: 100%;">
                     <label style="width: 15%">ItemID:</label>
-                    <p style="display: inline-block;">{{$post->hoi_dap_id}}</p>
+                    <input class="form-control" style="display: inline-block; width:35%" id="post-itemid" type="text"
+                        placeholder="Post's itemID" value="{{$post->hoi_dap_id}}"/>
+                    <button class="btn btn-success" style="display: inline-block;" id="btn-change-itemid">Go</button>
                 </div>
                 <div class="form-group" style="width: 100%;">
                     <label style="vertical-align: top; width: 15%">Đề bài:</label>
@@ -42,23 +44,40 @@
                 <button class="btn btn-success" style="width: 30%; margin: 10px; padding: 15px;" id="btn-edit">Lưu
                 </button>
             </div>
-        </div>
+        </div>  
     </div>
 </div>
+@if(sizeof($histories) > 0 )
+<div class="container">
+    <h3>
+        Lịch sử chỉnh sửa 
+    </h3>
+    <div class="row">
+        @foreach($histories as $history)
+            <div class="col-md-4" style="margin-top:25px">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            {{$history->created}}
+                        </h4>
+                        <!-- <p class="card-text">Some example text. Some example text.</p> -->
+                        <button class="btn btn-outline-info" onclick="rollback({{$history->id}})">Rollback</button>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+@endif
 @endsection
 @push('scripts')
 <script src="{{url('/assets/ckeditor/ckeditor.js')}}" charset="utf-8"></script>
 <script src="{{url('/assets/ckeditor/adapters/jquery.js')}}"></script>
+
 <script>
-    // console.log(CKEDITOR.config);
-    // CKEDITOR.replace( 'editor', {
-    //     extraPlugins: 'easyimage',
-    //     cloudServices_tokenUrl: 'https://example.com/cs-token-endpoint',
-    //     cloudServices_uploadUrl: 'https://your-organization-id.cke-cs.com/easyimage/upload/'
-    // });
+    let histories = {!!$histories!!};
     let prev_id = "{{$post->id}}";
-    // $('#postquestion').ckeditor();
-    // $('#postanswer').ckeditor();
+
     CKEDITOR.replace('postquestion', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
     CKEDITOR.replace('postanswer', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
     function renderMathJax()
@@ -72,6 +91,12 @@
 
     $("#btn-change-id").click(function(){
         let post_id = $("#post-id").val();
+        if(prev_id != post_id)
+            window.location = "{{url('/post')}}/" + post_id + "/edit";
+    });
+    
+    $("#btn-change-itemid").click(function(){
+        let post_id = $("#post-itemid").val();
         if(prev_id != post_id)
             window.location = "{{url('/post')}}/" + post_id + "/edit";
     });
@@ -113,5 +138,54 @@
 
             })
     });
+
+    function rependl(str){
+        str = str.replace('\nolimits', '\zolimits');
+        str = str.replace('\neq', '\zeq');
+        str = str.replace('\ne', '\ze');
+        str = str.replace('\n', '<br/>');
+        str = str.replace('\zolimits', '\nolimits');
+        str = str.replace('\zeq', '\neq');
+        str = str.replace('\ze', '\ne');
+        return str;
+    }
+
+    function addSpan(str)
+    {
+        let out = '';
+        
+        for(i=0;i<str.length;++i){
+            if(str[i] == '\\' && str[i+1] == '(') {
+                out = out + '<span class="math-tex">\\(';
+                i+=1;
+            }
+            else {
+                if(str[i] == '\\' && str[i+1] == ')'){
+                    out = out + '\\)</span>';
+                    i+=1;
+                }
+                else
+                    out+=str[i];
+            }
+        }
+        console.log(out);
+        return out;
+    }
+
+    var x;
+    var y;
+    function rollback(historyId){
+        let history = histories.find(x => x.id == historyId);
+        let content = JSON.parse(history.content);
+        y = content;
+        content.de_bai = rependl(content.de_bai);
+        content.de_bai = addSpan(content.de_bai);
+        content.dap_an = rependl(content.dap_an);
+        content.dap_an = addSpan(content.dap_an);
+        console.log(content);
+        x = content;
+        CKEDITOR.instances.postquestion.setData(content.de_bai);
+        CKEDITOR.instances.postanswer.setData(content.dap_an);
+    }
 </script>
 @endpush
