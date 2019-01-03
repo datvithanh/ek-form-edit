@@ -61,7 +61,7 @@ class WebController extends Controller
         $data['post'] = $post;
         $data['histories'] = PostHistory::where('post_id', $postId)->get()->map(function($history) {
             // $history->content = $this->addSpan($history->content);
-            $history->created = date('H:i d-m-Y',strtotime($history->created_at . ' + 7 hours'));
+            $history->created = date('H:i d-m-Y',strtotime($history->created_at));# . ' + 7 hours'));
             return $history;
         });
         $data['histories_json'] = json_encode($data['histories']);
