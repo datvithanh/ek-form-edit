@@ -176,16 +176,14 @@
     var y;
     function rollback(historyId){
         let history = histories.find(x => x.id == historyId);
-        let content = JSON.parse(history.content);
-        y = content;
-        content.de_bai = rependl(content.de_bai);
-        content.de_bai = addSpan(content.de_bai);
-        content.dap_an = rependl(content.dap_an);
-        content.dap_an = addSpan(content.dap_an);
-        console.log(content);
-        x = content;
-        CKEDITOR.instances.postquestion.setData(content.de_bai);
-        CKEDITOR.instances.postanswer.setData(content.dap_an);
+        de_bai = history.de_bai;
+        dap_an = history.dap_an;
+        // de_bai = rependl(de_bai);
+        de_bai = addSpan(de_bai);
+        // dap_an = rependl(dap_an);
+        dap_an = addSpan(dap_an);
+        CKEDITOR.instances.postquestion.setData(de_bai);
+        CKEDITOR.instances.postanswer.setData(dap_an);
     }
 </script>
 @endpush

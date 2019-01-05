@@ -59,7 +59,11 @@ class WebController extends Controller
 
         $data['post'] = $post;
         $data['histories'] = PostHistory::where('post_id', $postId)->orderBy('created_at', 'desc')->get()->map(function ($history) {
-            $history->content = $this->endlToBr($history->content);
+            // dd($history->content);
+            // $history->content = $this->endlToBr($history->content);
+
+            $history->de_bai = $this->endlToBr(json_decode($history->content)->de_bai);
+            $history->dap_an = $this->endlToBr(json_decode($history->content)->dap_an);
             $history->created = date('H:i d-m-Y', strtotime($history->created_at));# . ' + 7 hours'));
             return $history;
         });
@@ -70,6 +74,8 @@ class WebController extends Controller
     public function editPostApi($postId, Request $request)
     {
         $post = Post::find($postId);
+        $request->de_bai = str_replace('<br/>', '', $request->de_bai);
+        $request->dap_an = str_replace('<br/>', '', $request->dap_an);
 
         $count = PostHistory::where('post_id', $postId)->count();
         if ($count == 6) {
