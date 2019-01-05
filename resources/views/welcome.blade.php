@@ -3,9 +3,9 @@
 @section('content')
 <div class="container">
     <div class="table-wrapper">
-        <div class="card-body">
-                <div class="col-md-8"><h2>Edit câu hỏi đáp</h2></div>
-        </div>
+        <!-- <div class="card-body">
+                <div class="col-md-8"><h2>Sửa câu hỏi đáp</h2></div>
+        </div> -->
         <div class="card-body" style="padding-bottom: 0px">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 20px">
                 <div class="form-group" style="width: 100%;">
@@ -61,7 +61,7 @@
                             {{$history->created}}
                         </h4>
                         <!-- <p class="card-text">Some example text. Some example text.</p> -->
-                        <button class="btn btn-outline-info" onclick="rollback({{$history->id}})">Rollback</button>
+                        <button class="btn btn-outline-info" onclick="rollback({{$history->id}})">Sử dụng lịch sử</button>
                     </div>
                 </div>
             </div>

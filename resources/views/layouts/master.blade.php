@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Edit</title>
+    <title>Sửa câu hỏi đáp</title>
 
     <!-- Scripts -->
 
@@ -28,15 +28,14 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="">Datvt</a>
-                        </li>
-                    </ul> -->
+                                <a class="nav-link" href="">Sửa câu hỏi đáp</a>
+                            </li>
+                        </ul>
+                    <ul class="navbar-nav ml-auto">
+                        
+                    </ul>
                 </div>
             </div>
         </nav>

@@ -9,7 +9,7 @@ use App\PostHistory;
 
 class WebController extends Controller
 {
-    public function endlToBr(&$text)
+    public function endlToBr($text)
     {
         $text = str_replace('\nolimits', '\zolimits', $text);
         $text = str_replace('\neq', '\zeq', $text);
@@ -18,6 +18,7 @@ class WebController extends Controller
         $text = str_replace('\zolimits', '\nolimits', $text);
         $text = str_replace('\zeq', '\neq', $text);
         $text = str_replace('\ze', '\ne', $text);
+        return $text;
     }
 
     public function addSpan($str)
@@ -44,24 +45,22 @@ class WebController extends Controller
 
     public function editPost($postId, Request $request)
     {
-        // dd($postId);
         $post = DB::table('all_posts')->where('id', $postId)->first();
         if ($post == null) {
             $post = DB::table('all_posts')->where('hoi_dap_id', $postId)->first();
             if ($post == null)
                 return view('404');
         }
-
-        $this->endlToBr($post->de_bai);
-        $this->endlToBr($post->dap_an);
+        $post->de_bai = $this->endlToBr($post->de_bai);
+        $post->dap_an = $this->endlToBr($post->dap_an);
 
         $post->de_bai = $this->addSpan($post->de_bai);
         $post->dap_an = $this->addSpan($post->dap_an);
 
         $data['post'] = $post;
-        $data['histories'] = PostHistory::where('post_id', $postId)->get()->map(function($history) {
-            // $history->content = $this->addSpan($history->content);
-            $history->created = date('H:i d-m-Y',strtotime($history->created_at));# . ' + 7 hours'));
+        $data['histories'] = PostHistory::where('post_id', $postId)->orderBy('created_at', 'desc')->get()->map(function ($history) {
+            $history->content = $this->endlToBr($history->content);
+            $history->created = date('H:i d-m-Y', strtotime($history->created_at));# . ' + 7 hours'));
             return $history;
         });
         $data['histories_json'] = json_encode($data['histories']);
