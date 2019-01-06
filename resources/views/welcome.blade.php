@@ -11,14 +11,14 @@
                 <div class="form-group" style="width: 100%;">
                     <label style="width: 15%"><b>ID:</b></label>
                     <input class="form-control" style="display: inline-block; width:35%" id="post-id" min="0" type="html"
-                        placeholder="Post's id" value="{{$post->id}}"/>
+                        placeholder="Post's id" value="{{$post->id}}" maxlength="8">
                     &nbsp;
                     <button class="btn btn-success" style="display: inline-block;" id="btn-change-id">Tìm kiếm</button>
                 </div>
                 <div class="form-group" style="width: 100%;">
                     <label style="width: 15%"><b>ItemID:</b></label>
                     <input class="form-control" style="display: inline-block; width:35%" id="post-itemid" type="text"
-                        placeholder="Post's itemID" value="{{$post->hoi_dap_id}}"/>
+                        placeholder="Post's itemID" value="{{$post->hoi_dap_id}}" maxlength="50"/>
                     &nbsp;
                     <button class="btn btn-success" style="display: inline-block;" id="btn-change-itemid">Tìm kiếm</button>
                 </div>
@@ -128,7 +128,6 @@
     });
 
     $("#btn-edit").click(function(){
-        let id = $("#post-id").val();
         $("#btn-edit").prop('disabled', true);
         // let de_bai = CKEDITOR.instances.postquestion.document.getBody().getText();
         // let dap_an = CKEDITOR.instances.postanswer.document.getBody().getText();
@@ -136,7 +135,8 @@
         let dap_an = CKEDITOR.instances.postanswer.getData();
         de_bai = de_bai.substr(3, de_bai.length-8);
         dap_an = dap_an.substr(3, dap_an.length-8);
-        if(id == "" || de_bai == "" || dap_an == "" || de_bai.trim() == "" || dap_an.trim() == "" || id.trim() == "")
+
+        if(de_bai == "" || dap_an == "" || de_bai.trim() == "" || dap_an.trim() == "")
         {
             toastr.error("Thiếu thông tin");
             return;
@@ -147,10 +147,10 @@
         }
         axios.put("{{url('/api/post/')}}/{{$post->id}}", data)
             .then(function(response){
-                toastr.success("Edit Thành công");
+                toastr.success("Sửa Thành công");
                 window.location.reload();
             }).catch(function(error){
-
+                toastr.error("Có lỗi xảy ra. Vui lòng thử lại sau");
             })
     });
 
