@@ -12,12 +12,14 @@
                     <label style="width: 15%">ID:</label>
                     <input class="form-control" style="display: inline-block; width:35%" id="post-id" type="text"
                         placeholder="Post's id" value="{{$post->id}}"/>
+                    &nbsp;
                     <button class="btn btn-success" style="display: inline-block;" id="btn-change-id">Go</button>
                 </div>
                 <div class="form-group" style="width: 100%;">
                     <label style="width: 15%">ItemID:</label>
                     <input class="form-control" style="display: inline-block; width:35%" id="post-itemid" type="text"
                         placeholder="Post's itemID" value="{{$post->hoi_dap_id}}"/>
+                    &nbsp;
                     <button class="btn btn-success" style="display: inline-block;" id="btn-change-itemid">Go</button>
                 </div>
                 <div class="form-group" style="width: 100%;">
@@ -130,7 +132,7 @@
             de_bai: de_bai,
             dap_an: dap_an
         }
-        axios.put("{{url('/api/post/')}}" + "/" + id, data)
+        axios.put("{{url('/api/post/')}}/{{$post->id}}", data)
             .then(function(response){
                 toastr.success("Edit Thành công");
                 window.location.reload();
