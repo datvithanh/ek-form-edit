@@ -9,21 +9,22 @@
         <div class="card-body" style="padding-bottom: 0px">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 20px">
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 15%">ID:</label>
-                    <input class="form-control" style="display: inline-block; width:35%" id="post-id" type="text"
+                    <label style="width: 15%"><b>ID:</b></label>
+                    <input class="form-control" style="display: inline-block; width:35%" id="post-id" min="0" type="html"
                         placeholder="Post's id" value="{{$post->id}}"/>
                     &nbsp;
-                    <button class="btn btn-success" style="display: inline-block;" id="btn-change-id">Go</button>
+                    <button class="btn btn-success" style="display: inline-block;" id="btn-change-id">Tìm kiếm</button>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="width: 15%">ItemID:</label>
+                    <label style="width: 15%"><b>ItemID:</b></label>
                     <input class="form-control" style="display: inline-block; width:35%" id="post-itemid" type="text"
                         placeholder="Post's itemID" value="{{$post->hoi_dap_id}}"/>
                     &nbsp;
-                    <button class="btn btn-success" style="display: inline-block;" id="btn-change-itemid">Go</button>
+                    <button class="btn btn-success" style="display: inline-block;" id="btn-change-itemid">Tìm kiếm</button>
                 </div>
+                <hr width="100%">
                 <div class="form-group" style="width: 100%;">
-                    <label style="vertical-align: top; width: 15%">Đề bài:</label>
+                    <label style="vertical-align: top; width: 15%"><b>Đề bài:</b></label>
                     <div style="display:inline-block; width:80%">
 
                     <textarea class="form-control" style="width:100%" id="postquestion" rows="7"
@@ -34,7 +35,7 @@
                     </div>
                 </div>
                 <div class="form-group" style="width: 100%;">
-                    <label style="vertical-align: top; width: 15%">Đáp án:</label>
+                    <label style="vertical-align: top; width: 15%"><b>Đáp án:</b></label>
                     <div style="display:inline-block; width:80%">
                     <textarea class="form-control" style="width:100%" id="postanswer" rows="7"
                         placeholder="Post's answer">{{$post->dap_an}}</textarea>
@@ -51,6 +52,7 @@
 </div>
 @if(sizeof($histories) > 0 )
 <div class="container">
+    <hr>
     <h3>
         Lịch sử chỉnh sửa 
     </h3>
@@ -79,6 +81,7 @@
 <script>
     let histories = {!!$histories!!};
     let prev_id = "{{$post->id}}";
+    let item_id = "{{$post->hoi_dap_id}}";
 
     CKEDITOR.replace('postquestion', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
     CKEDITOR.replace('postanswer', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
@@ -93,14 +96,24 @@
 
     $("#btn-change-id").click(function(){
         let post_id = $("#post-id").val();
-        if(prev_id != post_id)
+        if(prev_id != post_id) {
+            if(post_id == "" || isNaN(post_id) || Number(post_id) <= 0 || Number.isInteger(Number(post_id)) == false){
+                toastr.error("ID không được để trống và phải là số nguyên dương");
+                return;
+            }
             window.location = "{{url('/post')}}/" + post_id + "/edit";
+        }
     });
     
     $("#btn-change-itemid").click(function(){
         let post_id = $("#post-itemid").val();
-        if(prev_id != post_id)
+        if(item_id != post_id){
+            if(post_id == ""){
+                toastr.error("ID không được để trống");
+                return;
+            }
             window.location = "{{url('/post')}}/" + post_id + "/edit";
+        }
     });
 
     $('#postquestion').bind('input propertychange', function() {
