@@ -3,9 +3,9 @@
 @section('content')
 <div class="container">
     <div class="table-wrapper">
-        <!-- <div class="card-body">
-                <div class="col-md-8"><h2>Sửa câu hỏi đáp</h2></div>
-        </div> -->
+        <div class="card-body">
+                <div class="col-md-8"><h3>Sửa câu hỏi đáp</h3></div>
+        </div>
         <div class="card-body" style="padding-bottom: 0px">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 20px">
                 <div class="form-group" style="width: 100%;">

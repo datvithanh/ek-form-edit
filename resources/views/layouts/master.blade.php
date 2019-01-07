@@ -21,7 +21,7 @@
 </head>
 <body>
     <div>
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel navbar-fixed-top" style="-webkit-box-shadow: 0 8px 6px -6px #999;">
+        <!-- <nav class="navbar navbar-expand-md navbar-light navbar-laravel navbar-fixed-top" style="-webkit-box-shadow: 0 8px 6px -6px #999;">
             <div class="container">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -38,7 +38,7 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </nav> -->
         
         <main class="py-4">
             @yield('content')
