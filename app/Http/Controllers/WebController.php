@@ -9,6 +9,15 @@ use App\PostHistory;
 
 class WebController extends Controller
 {
+    public function reverse($text)
+    {
+        $text = str_replace('<br/>', '', $text);
+        $text = str_replace('<br/>', '', $text);
+
+        $text = str_replace('http://dev.data.giaingay.io/TestProject/public/media/', 'media/', $text);
+        return $text;
+    }
+
     public function endlToBr($text)
     {
         // $text = str_replace('\nolimits', '\zolimits', $text);
@@ -39,29 +48,29 @@ class WebController extends Controller
         $text = str_replace('media/', 'http://dev.data.giaingay.io/TestProject/public/media/', $text);
 
 
-        if (preg_match_all('/<table>(.|\||)*?<\/table>/', $text, $matches)) {
+        // if (preg_match_all('/<table>(.|\||)*?<\/table>/', $text, $matches)) {
 
-            foreach ($matches[0] as $table_html) {
+        //     foreach ($matches[0] as $table_html) {
 
-                $html = $table_html;
-                $html = str_replace(['<table>', '</table>'], '', $html);
-                $html = $parser->parse($html);
+        //         $html = $table_html;
+        //         $html = str_replace(['<table>', '</table>'], '', $html);
+        //         $html = $parser->parse($html);
 
-                if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
-                    foreach ($matches[0] as $j => $markdown_link) {
-                        $number = '![]' . $matches[1][$j];
-                        $image_html = '<img src="' . $matches[2][$j] . '"/>';
+        //         if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+        //             foreach ($matches[0] as $j => $markdown_link) {
+        //                 $number = '![]' . $matches[1][$j];
+        //                 $image_html = '<img src="' . $matches[2][$j] . '"/>';
 
-                        $html = str_replace($markdown_link, '', $html);
-                        $html = str_replace($number, $image_html, $html);
-                    }
-                }
+        //                 $html = str_replace($markdown_link, '', $html);
+        //                 $html = str_replace($number, $image_html, $html);
+        //             }
+        //         }
 
-                $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+        //         $html = str_replace("&lt;br/&gt;", "<br/>", $html);
 
-                $text = str_replace($table_html, $html, $text);
-            }
-        }
+        //         $text = str_replace($table_html, $html, $text);
+        //     }
+        // }
 
         return $text;
     }
@@ -119,8 +128,12 @@ class WebController extends Controller
     public function editPostApi($postId, Request $request)
     {
         $post = Post::find($postId);
-        $request->de_bai = str_replace('<br/>', '', $request->de_bai);
-        $request->dap_an = str_replace('<br/>', '', $request->dap_an);
+        $request->de_bai = $this->reverse($request->de_bai);
+        $request->dap_an = $this->reverse($request->dap_an);
+        // $request->de_bai = str_replace('<br/>', '', $request->de_bai);
+        // $request->dap_an = str_replace('<br/>', '', $request->dap_an);
+
+        // $text = str_replace('media/', 'http://dev.data.giaingay.io/TestProject/public/media/', $text);
 
         $count = PostHistory::where('post_id', $postId)->count();
         if ($count == 6) {
