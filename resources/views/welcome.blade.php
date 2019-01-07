@@ -121,7 +121,7 @@
     });
 
     $("#post-id").inputFilter(function(value) {
-        return /^-?\d*$/.test(value); });
+        return /^\d*$/.test(value); });
     
     $("#post-itemid").inputFilter(function(value) {
         return /^[0-9a-zA-Z.]*$/i.test(value); });
