@@ -115,7 +115,7 @@ class WebController extends Controller
 
         $post->de_bai = $request->de_bai;
         $post->dap_an = $request->dap_an;
-        $post->updated_at = date('Y-m-d H:i:s', strtotime(Carbon::now() . ' + 10 minutes'));
+        $post->updated_at = date('Y-m-d H:i:s', strtotime(Carbon::now() . ' - 7 hours + 10 minutes'));
 
         $post->save();
         return ['message' => 'success'];
