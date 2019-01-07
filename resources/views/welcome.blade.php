@@ -61,11 +61,13 @@
             <div class="col-md-4" style="margin-top:25px">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">
+                        <h4 class="card-title" style="text-align: center">
                             {{$history->created}}
                         </h4>
                         <!-- <p class="card-text">Some example text. Some example text.</p> -->
+                        <div class="d-flex justify-content-center">
                         <button class="btn btn-outline-info" onclick="rollback({{$history->id}})">Sử dụng lịch sử</button>
+                        </div>
                     </div>
                 </div>
             </div>
