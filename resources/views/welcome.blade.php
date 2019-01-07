@@ -98,7 +98,7 @@
         let post_id = $("#post-id").val();
         if(prev_id != post_id) {
             if(post_id == "" || isNaN(post_id) || Number(post_id) <= 0 || Number.isInteger(Number(post_id)) == false){
-                toastr.error("ID không được để trống và phải là số nguyên dương");
+                toastr.error("Tìm kiếm bằng ID: ID không được để trống và phải là số nguyên dương");
                 return;
             }
             window.location = "{{url('/post')}}/" + post_id + "/edit";
@@ -109,7 +109,7 @@
         let post_id = $("#post-itemid").val();
         if(item_id != post_id){
             if(post_id == ""){
-                toastr.error("ID không được để trống");
+                toastr.error("Tìm kiếm bằng ItemId: ItemID không được để trống");
                 return;
             }
             window.location = "{{url('/post')}}/" + post_id + "/edit";
