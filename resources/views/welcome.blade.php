@@ -174,7 +174,9 @@
         axios.put("{{url('/api/post/')}}/{{$post->id}}", data)
             .then(function(response){
                 toastr.success("Sửa Thành công");
-                window.location.reload();
+                setTimeout(function() {
+                    window.location.reload();
+                }, 500);
             }).catch(function(error){
                 toastr.error("Có lỗi xảy ra. Vui lòng thử lại sau");
             })
