@@ -94,6 +94,21 @@
         head.appendChild(script);
     }
 
+    (function($) {
+    $.fn.inputFilter = function(inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            }
+            });
+        };
+    }(jQuery));
+
     $("#btn-change-id").click(function(){
         let post_id = $("#post-id").val();
         if(prev_id != post_id) {
@@ -104,6 +119,12 @@
             window.location = "{{url('/post')}}/" + post_id + "/edit";
         }
     });
+
+    $("#post-id").inputFilter(function(value) {
+        return /^-?\d*$/.test(value); });
+    
+    $("#post-itemid").inputFilter(function(value) {
+        return /^[0-9a-zA-Z.]*$/i.test(value); });
     
     $("#btn-change-itemid").click(function(){
         let post_id = $("#post-itemid").val();
