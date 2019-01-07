@@ -64,7 +64,7 @@ class WebController extends Controller
 
             $history->de_bai = $this->endlToBr(json_decode($history->content)->de_bai);
             $history->dap_an = $this->endlToBr(json_decode($history->content)->dap_an);
-            $history->created = date('H:i d-m-Y', strtotime($history->created_at));# . ' + 7 hours'));
+            $history->created = date('H:i d-m-Y', strtotime($history->created_at . ' + 10 minutes'));
             return $history;
         });
         $data['histories_json'] = json_encode($data['histories']);
