@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Post;
 use App\PostHistory;
+use Carbon\Carbon;
 
 class WebController extends Controller
 {
@@ -114,6 +115,7 @@ class WebController extends Controller
 
         $post->de_bai = $request->de_bai;
         $post->dap_an = $request->dap_an;
+        $post->updated_at = date('Y-m-d H:i:s', strtotime(Carbon::now() . ' + 10 minutes'));
 
         $post->save();
         return ['message' => 'success'];
@@ -134,6 +136,7 @@ class WebController extends Controller
         $text = str_replace('\n', '<br/>', $text);
 
         // dd($this->reverse($text));
+        dd(Carbon::now() . '+ 10 minutes');
         dd($this->endlToBr($text));
     }
 }
