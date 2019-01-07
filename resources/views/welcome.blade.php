@@ -133,8 +133,8 @@
         // let dap_an = CKEDITOR.instances.postanswer.document.getBody().getText();
         let de_bai = CKEDITOR.instances.postquestion.getData();
         let dap_an = CKEDITOR.instances.postanswer.getData();
-        de_bai = de_bai.substr(3, de_bai.length-8);
-        dap_an = dap_an.substr(3, dap_an.length-8);
+        // de_bai = de_bai.substr(3, de_bai.length-8);
+        // dap_an = dap_an.substr(3, dap_an.length-8);
 
         if(de_bai == "" || dap_an == "" || de_bai.trim() == "" || dap_an.trim() == "")
         {
