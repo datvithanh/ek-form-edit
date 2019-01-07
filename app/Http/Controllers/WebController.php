@@ -11,6 +11,15 @@ class WebController extends Controller
 {
     public function endlToBr($text)
     {
+        // $text = str_replace('\nolimits', '\zolimits', $text);
+        // $text = str_replace('\neq', '\zeq', $text);
+        // $text = str_replace('\ne', '\ze', $text);
+        // $text = str_replace('\n', '<br/>', $text);
+        // $text = str_replace('\zolimits', '\nolimits', $text);
+        // $text = str_replace('\zeq', '\neq', $text);
+        // $text = str_replace('\ze', '\ne', $text);
+        $parser = new \cebe\markdown\MarkdownExtra();
+
         $text = str_replace('\nolimits', '\zolimits', $text);
         $text = str_replace('\neq', '\zeq', $text);
         $text = str_replace('\ne', '\ze', $text);
@@ -18,6 +27,42 @@ class WebController extends Controller
         $text = str_replace('\zolimits', '\nolimits', $text);
         $text = str_replace('\zeq', '\neq', $text);
         $text = str_replace('\ze', '\ne', $text);
+
+        if (preg_match_all('/\s{2,}/', $text, $matches)) {
+            foreach ($matches[0] as $space_text) {
+                $replace = str_repeat('&nbsp;', strlen($space_text));
+
+                $text = str_ireplace($space_text, $replace, $text);
+            }
+        }
+
+        $text = str_replace('media/', 'http://dev.data.giaingay.io/TestProject/public/media/', $text);
+
+
+        if (preg_match_all('/<table>(.|\||)*?<\/table>/', $text, $matches)) {
+
+            foreach ($matches[0] as $table_html) {
+
+                $html = $table_html;
+                $html = str_replace(['<table>', '</table>'], '', $html);
+                $html = $parser->parse($html);
+
+                if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+                    foreach ($matches[0] as $j => $markdown_link) {
+                        $number = '![]' . $matches[1][$j];
+                        $image_html = '<img src="' . $matches[2][$j] . '"/>';
+
+                        $html = str_replace($markdown_link, '', $html);
+                        $html = str_replace($number, $image_html, $html);
+                    }
+                }
+
+                $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+
+                $text = str_replace($table_html, $html, $text);
+            }
+        }
+
         return $text;
     }
 
