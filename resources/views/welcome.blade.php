@@ -81,7 +81,7 @@
 <script>
     let histories = {!!$histories!!};
     let prev_id = "{{$post->id}}";
-    let item_id = "{{$post->hoi_dap_id}}";
+    let prev_itemid = "{{$post->hoi_dap_id}}";
 
     CKEDITOR.replace('postquestion', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
     CKEDITOR.replace('postanswer', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
@@ -128,7 +128,7 @@
     
     $("#btn-change-itemid").click(function(){
         let post_id = $("#post-itemid").val();
-        if(item_id != post_id){
+        if(prev_itemid != post_id){
             if(post_id == ""){
                 toastr.error("Tìm kiếm bằng ItemId: ItemID không được để trống");
                 return;
@@ -149,19 +149,24 @@
     });
 
     $("#btn-edit").click(function(){
-        $("#btn-edit").prop('disabled', true);
         // let de_bai = CKEDITOR.instances.postquestion.document.getBody().getText();
         // let dap_an = CKEDITOR.instances.postanswer.document.getBody().getText();
         let de_bai = CKEDITOR.instances.postquestion.getData();
         let dap_an = CKEDITOR.instances.postanswer.getData();
         // de_bai = de_bai.substr(3, de_bai.length-8);
         // dap_an = dap_an.substr(3, dap_an.length-8);
+        if($("#post-id").val() != prev_id || $("#post-itemid").val() != prev_itemid) 
+        {
+            toastr.error("Giữ nguyên ID và ItemID để thay đổi");
+            return;
+        }
 
         if(de_bai == "" || dap_an == "" || de_bai.trim() == "" || dap_an.trim() == "")
         {
             toastr.error("Thiếu thông tin");
             return;
         }
+        $("#btn-edit").prop('disabled', true);
         let data = {
             de_bai: de_bai,
             dap_an: dap_an
