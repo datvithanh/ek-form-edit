@@ -46,6 +46,24 @@ class WebController extends Controller
         return $text;
     }
 
+    public function brToEndlLatex($text) {
+        $ok = 0;
+        $ntext = '';
+        for($i=0; $i<strlen($text); $i++){
+            if($ok == 1 && $text[$i] == '<' && $text[$i+1] == 'b' && $text[$i+2] == 'r' && $text[$i+3] == '/' && $text[$i+4] == '>'){
+                $ntext = $ntext . '\\\\';
+                $i+=4;
+                continue;
+            }
+            if($text[$i] == '\\' && $text[$i+1] == '(')
+                $ok = 1;
+            if($text[$i] == '\\' && $text[$i+1] == ')')
+                $ok = 0;
+            $ntext .= $text[$i];
+        }
+        return $ntext;
+    }
+
     public function endlToBr($text)
     {
         $text = str_replace('\nolimits', '\zolimits', $text);
@@ -63,6 +81,7 @@ class WebController extends Controller
 
         $text = str_replace("\(", '<span class="math-tex">\(', $text);
         $text = str_replace("\)", '\)</span>', $text);
+        $text = $this->brToEndlLatex($text);
         return $text;
     }
 
@@ -123,20 +142,28 @@ class WebController extends Controller
 
     public function test()
     {
-        $text = '<p>Tìm hai số u và v trong mỗi trường hợp sau:<br />
-        a) <span class="math-tex">\(u + v = 42\)</span>, <span class="math-tex">\(uv = 441\)</span>;<br />
-        b) <span class="math-tex">\(u + v = -42\)</span>, <span class="math-tex">\(uv = -400\)</span>;<br />
-        c) <span class="math-tex">\(u – v = 5\)</span>, <span class="math-tex">\(uv = 24\)</span>.</p>
+        $post = DB::table('all_posts')->where('id', 96)->first();
+        $text = $this->endlToBr($post->dap_an);
+        $ok = 0;
+        $ntext = '';
+        for($i=0; $i<strlen($text); $i++){
+            if($ok == 1 && $text[$i] == '<' && $text[$i+1] == 'b' && $text[$i+2] == 'r' && $text[$i+3] == '/' && $text[$i+4] == '>'){
+                $ntext = $ntext . '\\\\';
+                $i+=4;
+                continue;
+            }
+            if($text[$i] == '\\' && $text[$i+1] == '(')
+                $ok = 1;
+            if($text[$i] == '\\' && $text[$i+1] == ')')
+                $ok = 0;
+            $ntext .= $text[$i];
+        }
         
-        <p>&nbsp;</p>
+                // echo $i . ' ' . $text[$i+1] . '<br/>';
         
-        <p>kaskd</p>';
-        $post = DB::table('all_posts')->where('id', 3249)->first();
-        $text = $post->de_bai;
-        $text = str_replace('\n', '<br/>', $text);
+        
+            // echo $text[$i];
+        dd($ntext);
 
-        // dd($this->reverse($text));
-        dd(Carbon::now() . '+ 10 minutes');
-        dd($this->endlToBr($text));
     }
 }
