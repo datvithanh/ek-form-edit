@@ -152,8 +152,10 @@ class WebController extends Controller
         }
         $history = new PostHistory();
         $history->post_id = $post->id;
-        $history->de_bai = str_replace('\r', '', $post->de_bai);
-        $history->dap_an = str_replace('\r', '', $post->dap_an);
+        // $history->de_bai = str_replace('\r', '', $post->de_bai);
+        // $history->dap_an = str_replace('\r', '', $post->dap_an);
+        $history->de_bai = $post->de_bai;
+        $history->dap_an = $post->dap_an;
         $history->content = json_encode($post, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $history->save();
 
