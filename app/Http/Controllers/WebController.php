@@ -15,21 +15,21 @@ class WebController extends Controller
         $text = str_replace('<br />', '\n', $text);
         $text = str_replace('<br />', '\n', $text);
 
-        $end_block_tags = [
-            '</p>',
-        ];
+        // $end_block_tags = [
+        //     '</p>',
+        // ];
 
-        if(preg_match_all('/<[^>]*>/', $text, $matches)){
-            foreach ($matches[0] as $tag_html){
-                if(!preg_match('/<\s*img/', $tag_html)
-                    && !preg_match('/<\s*table/', $tag_html)
-                    && !preg_match('/<\/\s*table/', $tag_html)){
+        // if(preg_match_all('/<[^>]*>/', $text, $matches)){
+        //     foreach ($matches[0] as $tag_html){
+        //         if(!preg_match('/<\s*img/', $tag_html)
+        //             && !preg_match('/<\s*table/', $tag_html)
+        //             && !preg_match('/<\/\s*table/', $tag_html)){
 
-                    if(in_array($tag_html, $end_block_tags)) $text = str_replace($tag_html, '\n', $text);
-                    else $text = str_replace($tag_html, '', $text);
-                }
-            }
-        }
+        //             if(in_array($tag_html, $end_block_tags)) $text = str_replace($tag_html, '\n', $text);
+        //             else $text = str_replace($tag_html, '', $text);
+        //         }
+        //     }
+        // }
 
         $text = str_replace('< class="math-tex">\(', "\(", $text);
         $text = str_replace('\)span</span>', "\)", $text);
