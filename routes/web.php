@@ -14,6 +14,8 @@ Route::get('/', 'WebController@index');
 
 Route::get('/post/{postId}/edit', 'WebController@editPost');
 
+Route::get('/post/{postId}/raw', 'WebController@rawHistory');
+
 Route::put('/api/post/{postId}', 'WebController@editPostApi');
 
 Route::get('/api/test', 'WebController@test');

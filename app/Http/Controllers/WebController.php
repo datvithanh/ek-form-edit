@@ -31,6 +31,9 @@ class WebController extends Controller
             }
         }
 
+        $text = str_replace('< class="math-tex">\(', "\(", $text);
+        $text = str_replace('\)span</span>', "\)", $text);
+
         $text = str_replace('&nbsp;\n', '\n', $text);
 
         $text = str_replace('http://dev.data.giaingay.io/TestProject/public/media/', 'media/', $text);
@@ -74,8 +77,7 @@ class WebController extends Controller
         $text = str_replace('\zeq', '\neq', $text);
         $text = str_replace('\ze', '\ne', $text);
 
-        $text = str_replace('<span class="math-tex">\(', "\(", $text);
-        $text = str_replace('\)</span>', "\)", $text);
+        
 
         $text = str_replace('media/', 'http://dev.data.giaingay.io/TestProject/public/media/', $text);
 
@@ -115,6 +117,27 @@ class WebController extends Controller
         return view('welcome', $data);
     }
 
+    public function rawHistory($postId, Request $request) {
+        $post = DB::table('all_posts')->where('id', $postId)->first();
+        if ($post == null) {
+            $post = DB::table('all_posts')->where('hoi_dap_id', $postId)->first();
+            if ($post == null)
+                return view('404');
+        }
+        $post->de_bai = $this->endlToBr($post->de_bai);
+        $post->dap_an = $this->endlToBr($post->dap_an);
+
+        $data['post'] = $post;
+        $data['histories'] = PostHistory::where('post_id', $postId)->orderBy('created_at', 'desc')->get()->map(function ($history) {
+            $history->de_bai = json_decode($history->content)->de_bai;
+            $history->dap_an = json_decode($history->content)->dap_an;
+            $history->created = date('H:i d-m-Y', strtotime($history->created_at . ' + 10 minutes'));
+            return $history;
+        });
+        $data['histories_json'] = json_encode($data['histories']);
+        return view('raw', $data);
+    }
+
     public function editPostApi($postId, Request $request)
     {
         $post = Post::find($postId);
@@ -129,6 +152,8 @@ class WebController extends Controller
         }
         $history = new PostHistory();
         $history->post_id = $post->id;
+        $history->de_bai = str_replace('\r', '', $post->de_bai);
+        $history->dap_an = str_replace('\r', '', $post->dap_an);
         $history->content = json_encode($post, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $history->save();
 
