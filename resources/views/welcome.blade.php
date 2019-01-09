@@ -87,6 +87,14 @@
 
     CKEDITOR.replace('postquestion', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
     CKEDITOR.replace('postanswer', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
+
+    let qeditor = CKEDITOR.instances.postquestion;
+    let aeditor = CKEDITOR.instances.postanswer;
+
+    qeditor.on('change', function(){
+        console.log(qeditor.getData());
+    });
+
     function renderMathJax()
     {
         window.MathJax = {};
@@ -151,12 +159,8 @@
     });
 
     $("#btn-edit").click(function(){
-        // let de_bai = CKEDITOR.instances.postquestion.document.getBody().getText();
-        // let dap_an = CKEDITOR.instances.postanswer.document.getBody().getText();
-        let de_bai = CKEDITOR.instances.postquestion.getData();
-        let dap_an = CKEDITOR.instances.postanswer.getData();
-        // de_bai = de_bai.substr(3, de_bai.length-8);
-        // dap_an = dap_an.substr(3, dap_an.length-8);
+        let de_bai = qeditor.getData();
+        let dap_an = aeditor.getData();
         if($("#post-id").val() != prev_id || $("#post-itemid").val() != prev_itemid) 
         {
             toastr.error("Giữ nguyên ID và ItemID để thay đổi");
@@ -227,8 +231,8 @@
         de_bai = addSpan(de_bai);
         // dap_an = rependl(dap_an);
         dap_an = addSpan(dap_an);
-        CKEDITOR.instances.postquestion.setData(de_bai);
-        CKEDITOR.instances.postanswer.setData(dap_an);
+        qeditor.setData(de_bai);
+        aeditor.setData(dap_an);
     }
 </script>
 @endpush

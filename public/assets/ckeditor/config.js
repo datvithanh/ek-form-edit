@@ -30,6 +30,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// not needed in the Standard(s) toolbar.
 	config.removeButtons = 'Underline,Subscript,Superscript';
 
+	config.UseBROnCarriageReturn = true;
+
 	// Set the most common block elements.
 	config.format_tags = 'p;h1;h2;h3;pre';
 	
@@ -39,6 +41,10 @@ CKEDITOR.editorConfig = function( config ) {
 	config.entities = false;
 
 	config.entities_greek = false;
+
+	config.enterMode = CKEDITOR.ENTER_BR;
+
+	config.basicEntities = false;
 
 	config.mathJaxLib = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML';
 };
