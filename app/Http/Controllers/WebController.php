@@ -220,6 +220,105 @@ class WebController extends Controller
         return ['message' => 'success'];
     }
 
+    function parseHtml($text)
+    {
+        $parser = new \cebe\markdown\MarkdownExtra();
+
+        $text = str_replace('\nolimits', '\zolimits', $text);
+        $text = str_replace('\neq', '\zeq', $text);
+        $text = str_replace('\ne', '\ze', $text);
+        $text = str_replace('\n', '<br/>', $text);
+        $text = str_replace('\zolimits', '\nolimits', $text);
+        $text = str_replace('\zeq', '\neq', $text);
+        $text = str_replace('\ze', '\ne', $text);
+
+        if (preg_match_all('/\s{2,}/', $text, $matches)) {
+            foreach ($matches[0] as $space_text) {
+                $replace = str_repeat('&nbsp;', strlen($space_text));
+
+                $text = str_ireplace($space_text, $replace, $text);
+            }
+        }
+
+        $text = str_replace('media/', 'http://dev.data.giaingay.io/TestProject/public/media/', $text);
+
+        if (preg_match_all('/<table>(.|\||
+)*?<\/table>/', $text, $matches)) {
+
+            foreach ($matches[0] as $table_html) {
+
+                $html = $table_html;
+                $html = str_replace(['<table>', '</table>'], '', $html);
+                $html = $parser->parse($html);
+
+                if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+                    foreach ($matches[0] as $j => $markdown_link) {
+                        $number = '![]' . $matches[1][$j];
+                        $image_html = '<img src="' . $matches[2][$j] . '"/>';
+
+                        $html = str_replace($markdown_link, '', $html);
+                        $html = str_replace($number, $image_html, $html);
+                    }
+                }
+
+                $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+
+                $text = str_replace($table_html, $html, $text);
+            }
+        }
+
+        return $text;
+    }
+
+    public function l5($id, Request $request)
+    {
+        $post = Post::find($id);
+
+        $images = scandir(config('app.image_dir'));
+        $ch_images = array_filter(
+            $images,
+            function ($key) use ($post) {
+                if (strpos($key, $post->hoi_dap_id . '-CH') !== false)
+                    return true;
+                return false;
+            }
+        );
+        $da_images = array_filter(
+            $images,
+            function ($key) use ($post) {
+                if (strpos($key, $post->hoi_dap_id . '-DA') !== false)
+                    return true;
+                return false;
+            }
+        );
+
+        $ch_images = array_map(function ($val) {
+            return config('app.image_url') . '/' . $val;
+        }, $ch_images);
+
+        $da_images = array_map(function ($val) {
+            return config('app.image_url') . '/' . $val;
+        }, $da_images);
+        
+        $data = [];
+        // dd($ch_images);
+        $data['post_id'] = $id;
+        $data['post'] = [
+            'tieu_de' => $post->tieu_de,
+            'url' => $post->url,
+            'id' => $post->id,
+            'duong_dan_hoi' => $post->duong_dan_hoi,
+            'duong_dan_tra_loi' => $post->duong_dan_tra_loi,
+            'de_bai_parsed' => $this->parseHtml($post->de_bai),
+            'dap_an_parsed' => $this->parseHtml($post->dap_an),
+            'dap_an' => $post->dap_an,
+            'de_bai' => $post->de_bai,
+            'da_images' => $da_images,
+            'ch_images' => $ch_images,
+        ];
+        return view('l5', $data);
+    }
+
     public function test()
     {
         $text = '<table>
@@ -244,6 +343,23 @@ class WebController extends Controller
                         </tr>
                     </tbody>
                 </table>';
-        
+        if(preg_match_all('/<tr>(.|\||\s)*?<\/tr>/', $text, $matches))
+        dd($matches);
+    }
+
+    public function itemL5($id, Request $request)
+    {
+        $item = Post::find($id);
+        if($item->level != 'L5')
+            return [
+                'success' => false,
+                'message' => 'Không được chuyển sang L5-Z nếu item không ở L5'
+            ];
+        $item->level = 'L5-Z';
+        $item->save();
+        return [
+            'success' => true,
+            'message' => 'Chuyển level thành công'
+        ];
     }
 }

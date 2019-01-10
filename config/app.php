@@ -124,6 +124,10 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'image_dir' => env('IMAGE_DIR', '/var/www/html/backpack/storage/anh'),
+
+    'image_url' => env('IMAGE_URL', 'http://dev.data.giaingay.io/backpack/storage/anh'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
