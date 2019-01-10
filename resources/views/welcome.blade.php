@@ -1,6 +1,15 @@
 @extends('layouts.master')
 
 @section('content')
+    <?php
+        // function standardCkeditor($text){
+        //     $text = str_replace("\(", '<span class="math-tex">\(', $text);
+        //     $text = str_replace("\)", '\)</span>', $text);
+
+        //     return $text;
+        // }
+    ?>
+
 <div class="container">
     <div class="table-wrapper">
         <div class="card-body">
@@ -26,21 +35,19 @@
                 <div class="form-group" style="width: 100%;">
                     <label style="vertical-align: top; width: 15%"><b>Đề bài:</b></label>
                     <div style="display:inline-block; width:80%">
-
                     <textarea class="form-control" style="width:100%" id="postquestion" rows="7"
                         placeholder="Post's question in HTML">{{$post->de_bai}}</textarea>
                     <!-- <p style="margin-top:20px; width: 100%" id="postquestion-display">
-                        {!!$post->de_bai!!}
                     </p> -->
                     </div>
                 </div>
                 <div class="form-group" style="width: 100%;">
                     <label style="vertical-align: top; width: 15%"><b>Đáp án:</b></label>
                     <div style="display:inline-block; width:80%">
+
                     <textarea class="form-control" style="width:100%" id="postanswer" rows="7"
                         placeholder="Post's answer">{{$post->dap_an}}</textarea>
                     <!-- <p style="margin-top:20px; width: 100%" id="postanswer-display">
-                        {!!$post->dap_an!!}
                     </p> -->
                     </div>
                 </div>
@@ -50,6 +57,7 @@
         </div>  
     </div>
 </div>
+
 @if(sizeof($histories) > 0 )
 <div class="container">
     <hr>
@@ -87,15 +95,11 @@
 
     // CKEDITOR.replace('postquestion', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
     // CKEDITOR.replace('postanswer', { extraPlugins: 'mathjax,eqneditor', height: '250px', allowedContent: true});
-    CKEDITOR.replace('postquestion', { extraPlugins: 'eqneditor', height: '250px', allowedContent: true});
-    CKEDITOR.replace('postanswer', { extraPlugins: 'eqneditor', height: '250px', allowedContent: true});
+    CKEDITOR.replace('postquestion', {height: '250px', allowedContent: true});
+    CKEDITOR.replace('postanswer', {height: '250px', allowedContent: true});
 
     let qeditor = CKEDITOR.instances.postquestion;
     let aeditor = CKEDITOR.instances.postanswer;
-
-    qeditor.on('change', function(){
-        console.log(qeditor.getData());
-    });
 
     function renderMathJax()
     {
@@ -149,14 +153,26 @@
         }
     });
 
+    // $(document).ready(function(){
+    //     $("#postquestion-display")[0].innerHTML = qeditor.getData();
+    //     $("#postanswer-display")[0].innerHTML = aeditor.getData();
+    // });
+
+    qeditor.on('change', function(){
+        $("#postquestion-display")[0].innerHTML = qeditor.getData();
+    });
+
+    aeditor.on('change', function(){
+        $("#postanswer-display")[0].innerHTML = aeditor.getData();
+    });
+
     $('#postquestion').bind('input propertychange', function() {
-        console.log('asdjkdk');
-        $("#postquestion-display")[0].innerHTML = $("#postquestion").val();
+        $("#postquestion-display")[0].innerHTML = qeditor.getData();
         // renderMathJax();
     });
 
     $('#postanswer').bind('input propertychange', function() {
-        $("#postanswer-display")[0].innerHTML = $("#postanswer").val();
+        $("#postanswer-display")[0].innerHTML = aeditor.getData();
         // renderMathJax();
     });
 
