@@ -158,13 +158,13 @@
     //     $("#postanswer-display")[0].innerHTML = aeditor.getData();
     // });
 
-    qeditor.on('change', function(){
-        $("#postquestion-display")[0].innerHTML = qeditor.getData();
-    });
+    // qeditor.on('change', function(){
+    //     $("#postquestion-display")[0].innerHTML = qeditor.getData();
+    // });
 
-    aeditor.on('change', function(){
-        $("#postanswer-display")[0].innerHTML = aeditor.getData();
-    });
+    // aeditor.on('change', function(){
+    //     $("#postanswer-display")[0].innerHTML = aeditor.getData();
+    // });
 
     $('#postquestion').bind('input propertychange', function() {
         $("#postquestion-display")[0].innerHTML = qeditor.getData();

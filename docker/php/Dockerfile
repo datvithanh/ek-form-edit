@@ -16,6 +16,7 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli
 # RUN docker-php-ext-install pdo pdo_pgsql pgsql
 
 RUN apt-get install -y \
+    apt-get install -y git \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \

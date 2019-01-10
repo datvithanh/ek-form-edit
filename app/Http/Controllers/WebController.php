@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Post;
 use App\PostHistory;
 use Carbon\Carbon;
+use League\HTMLToMarkdown\HtmlConverter;
 
 class WebController extends Controller
 {
@@ -14,6 +15,7 @@ class WebController extends Controller
     {
         $text = str_replace('<br />', '\n', $text);
         $text = str_replace('<br />', '\n', $text);
+
 
         // $end_block_tags = [
         //     '</p>',
@@ -31,36 +33,54 @@ class WebController extends Controller
         //     }
         // }
 
+        //strip span tag
         // $text = str_replace('< class="math-tex">\(', "\(", $text);
         // $text = str_replace('\)span</span>', "\)", $text);
+
+        //parse html table back to markdown
+        // $parser = new HtmlConverter();
+        // if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
+        //     foreach ($matches[0] as $table_html) {
+        //         $html = $table_html;
+        //         $html = str_replace(['<table>', '</table>'], '', $html);
+        //         $html = $parser->convert($html);
+
+        //         if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+        //             foreach ($matches[0] as $j => $markdown_link) {
+        //                 $number = '![]' . $matches[1][$j];
+        //                 $image_html = '<img src="' . $matches[2][$j] . '"/>';
+
+        //                 $html = str_replace($markdown_link, '', $html);
+        //                 $html = str_replace($number, $image_html, $html);
+        //             }
+        //         }
+
+        //         $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+
+        //         $text = str_replace($table_html, $html, $text);
+        //     }
+        // }
+
 
         $text = str_replace('&nbsp;\n', '\n', $text);
 
         $text = str_replace('http://dev.data.giaingay.io/TestProject/public/media/', 'media/', $text);
         return $text;
     }
-    
-    public function removeEndl($text){
-        if (preg_match_all('/<p>(&nbsp;)*<\/p>\n( )*(\n)*( )*/', $text, $matches)) {
-            foreach ($matches[0] as $space_text) {
-                $text = str_ireplace($space_text, '', $text);
-            }
-        }
-        return $text;
-    }
 
-    public function brToEndlLatex($text) {
+    public function brToEndlLatex($text)
+    {
         $ok = 0;
         $ntext = '';
-        for($i=0; $i<strlen($text); $i++){
-            if($ok == 1 && $text[$i] == '<' && $text[$i+1] == 'b' && $text[$i+2] == 'r' && $text[$i+3] == '/' && $text[$i+4] == '>'){
+        for ($i = 0; $i < strlen($text); $i++) {
+            if ($ok == 1 && $text[$i] == '<' && $text[$i + 1] == 'b' && $text[$i + 2] == 'r' && $text[$i + 3] == '/' && $text[$i + 4] == '>') {
                 $ntext = $ntext . '\\\\';
-                $i+=4;
+                $i += 4;
                 continue;
             }
-            if($text[$i] == '\\' && $text[$i+1] == '(')
+            if ($text[$i] == '\\' && $text[$i + 1] == '(')
                 $ok = 1;
-            if($text[$i] == '\\' && $text[$i+1] == ')')
+            if ($text[$i] == '\\' && $text[$i + 1] == ')')
                 $ok = 0;
             $ntext .= $text[$i];
         }
@@ -77,15 +97,41 @@ class WebController extends Controller
         $text = str_replace('\zeq', '\neq', $text);
         $text = str_replace('\ze', '\ne', $text);
 
-        
+
 
         $text = str_replace('media/', 'http://dev.data.giaingay.io/TestProject/public/media/', $text);
         
+        //add span tag to display on mathjax
         // $text = str_replace("\(", '<span class="math-tex">\(', $text);
         // $text = str_replace("\)", '\)</span>', $text);
+
+        //parse markdown table to html
+        // $parser = new \cebe\markdown\MarkdownExtra();
+        // if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
+        //     foreach ($matches[0] as $table_html) {
+        //         $html = $table_html;
+        //         $html = str_replace(['<table>', '</table>'], '', $html);
+        //         $html = $parser->parse($html);
+
+        //         if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+        //             foreach ($matches[0] as $j => $markdown_link) {
+        //                 $number = '![]' . $matches[1][$j];
+        //                 $image_html = '<img src="' . $matches[2][$j] . '"/>';
+
+        //                 $html = str_replace($markdown_link, '', $html);
+        //                 $html = str_replace($number, $image_html, $html);
+        //             }
+        //         }
+
+        //         $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+
+        //         $text = str_replace($table_html, $html, $text);
+        //     }
+        // }
+
         $text = $this->brToEndlLatex($text);
-        if(preg_match_all('/\s{2,}/', $text, $matches)){
-            foreach ($matches[0] as $space_text){
+        if (preg_match_all('/\s{2,}/', $text, $matches)) {
+            foreach ($matches[0] as $space_text) {
                 $replace = str_repeat('&nbsp;', strlen($space_text));
 
                 $text = str_ireplace($space_text, $replace, $text);
@@ -124,7 +170,8 @@ class WebController extends Controller
         return view('welcome', ['post' => $post, 'histories' => $data['histories']]);
     }
 
-    public function rawHistory($postId, Request $request) {
+    public function rawHistory($postId, Request $request)
+    {
         $post = DB::table('all_posts')->where('id', $postId)->first();
         if ($post == null) {
             $post = DB::table('all_posts')->where('hoi_dap_id', $postId)->first();
@@ -176,28 +223,57 @@ class WebController extends Controller
 
     public function test()
     {
-        $post = DB::table('all_posts')->where('id', 96)->first();
-        $text = $this->endlToBr($post->dap_an);
-        $ok = 0;
-        $ntext = '';
-        for($i=0; $i<strlen($text); $i++){
-            if($ok == 1 && $text[$i] == '<' && $text[$i+1] == 'b' && $text[$i+2] == 'r' && $text[$i+3] == '/' && $text[$i+4] == '>'){
-                $ntext = $ntext . '\\\\';
-                $i+=4;
-                continue;
-            }
-            if($text[$i] == '\\' && $text[$i+1] == '(')
-                $ok = 1;
-            if($text[$i] == '\\' && $text[$i+1] == ')')
-                $ok = 0;
-            $ntext .= $text[$i];
-        }
-        
-                // echo $i . ' ' . $text[$i+1] . '<br/>';
-        
-        
-            // echo $text[$i];
-        dd($ntext);
+        $text = '<table>
+                    <thead>
+                        <tr>
+                            <th>GT</th>
+                            <th>∆ABC có (\widehat { \mathrm { BAC } } = 90 ^ { \circ })<br />
+                            Đường cao AH (H ∈ BC)<br />
+                            Đường tròn (H; HA); (H) ⋂ AB = D; (H) ⋂ AC = E; MB = MC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>KL</td>
+                            <td>* D, H, E thẳng hàng<br />
+                            * D, B, E, c nội tiếp được đường tròn<br />
+                            * AM ⊥ DE</td>
+                        </tr>
+                        <tr>
+                            <td> </td>
+                            <td>* AHOM là hình bình hành</td>
+                        </tr>
+                    </tbody>
+                </table>';
 
+
+        // $text = '<span>Turnips!</span>';
+        
+        $converter = new HtmlConverter();
+
+        if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
+            dd($matches);
+            foreach ($matches[0] as $table_html) {
+                $html = $table_html;
+                $html = str_replace(['<table>', '</table>'], '', $html);
+                $html = $converter->convert($html);
+
+                if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+                    foreach ($matches[0] as $j => $markdown_link) {
+                        $number = '![]' . $matches[1][$j];
+                        $image_html = '<img src="' . $matches[2][$j] . '"/>';
+
+                        $html = str_replace($markdown_link, '', $html);
+                        $html = str_replace($number, $image_html, $html);
+                    }
+                }
+
+                $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+
+                $text = str_replace($table_html, $html, $text);
+            }
+        }
+        $text = $converter->convert($text);
+        dd($text);
     }
 }
