@@ -96,26 +96,32 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <!-- <div style="color: black;"> -->
-                <!-- <div class="container"> -->
-                    <!-- <div class="card-body"> -->
+            <div style="color: black;">
+                <div class="container">
+                    <div class="card-body">
                         <label style="font-weight: 700">Đề bài</label>
                         <br/>
                         {!!$post['de_bai_parsed']!!}
-                    <!-- </div> -->
-                <!-- </div> -->
-            <!-- </div> -->
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
-            @if(count($post['ch_images']) > 0 )
-            <label style="color: black; font-weight: 700;">
-                Ảnh đề bài 
-            </label>
-            <br/>
-            @foreach($post['ch_images'] as $image) 
-            <img style="box-shadow: 1px 1px 1px 1px #dfdfdf" width="95%" src="{{$image}}">
-            @endforeach
-            @endif
+            <div style="color: black;">
+                <div class="container">
+                    <div class="card-body">
+                        @if(count($post['ch_images']) > 0 )
+                        <label style="font-weight: 700;">
+                            Ảnh đề bài 
+                        </label>
+                        <br/>
+                        @foreach($post['ch_images'] as $image) 
+                        <img style="box-shadow: 1px 1px 1px 1px #dfdfdf" width="95%" src="{{$image}}">
+                        @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
             <div style="color: black;">
@@ -133,26 +139,32 @@
 
     <div class="row">
         <div class="col-md-6">
-            <!-- <div style="color: black;"> -->
-                <!-- <div class="container"> -->
-                    <!-- <div class="card-body"> -->
+            <div style="color: black;">
+                <div class="container">
+                    <div class="card-body">
                         <label style="font-weight: 700">Đáp án</label>
                         <br/>
                         {!!$post['dap_an_parsed']!!}
-                    <!-- </div> -->
-                <!-- </div> -->
-            <!-- </div> -->
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
-            @if(count($post['da_images']) > 0 )
-            <label style="color: black; font-weight: 700;">
-                Ảnh đáp án
-            </label>
-            <br/>
-            @foreach($post['da_images'] as $image) 
-            <img style="box-shadow: 1px 1px 1px 1px #dfdfdf" width="95%" src="{{$image}}">
-            @endforeach
-            @endif
+            <div style="color: black;">
+                <div class="container">
+                    <div class="card-body">
+                        @if(count($post['da_images']) > 0 )
+                        <label style="font-weight: 700;">
+                            Ảnh đáp án
+                        </label>
+                        <br/>
+                        @foreach($post['da_images'] as $image) 
+                        <img style="box-shadow: 1px 1px 1px 1px #dfdfdf" width="95%" src="{{$image}}">
+                        @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
             <div style="color: black;">
