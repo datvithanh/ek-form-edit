@@ -10,6 +10,135 @@ use Carbon\Carbon;
 
 class WebController extends Controller
 {
+    public function standard($content){
+        $content = str_replace("\r", ' ', $content);
+        $content = str_replace("\t", ' ', $content);
+        $content = str_replace(' ', ' ', $content);
+        // $content = str_replace('', ' ', $content);
+//        $content = str_replace("\n", ' ', $content);
+        $content = str_replace("\xc2\xa0", ' ', $content);
+        $content = str_replace("&#13;", ' ', $content);
+
+        //loại text thừa : đề bài, câu hỏi, nhãn, bình luận
+
+        $remove_subject_texts = [
+            'loigiaihay.com',
+            'loigiaihay..com',
+            'loigiaihay',
+            'vietjack.com',
+            'vietjack',
+            'đề bài',
+            'Đề bài',
+            'câu hỏi',
+            'bình luận',
+        ];
+
+        $content = str_ireplace($remove_subject_texts, '', $content);
+
+
+        // loại text thừa lời giải
+        $remove_texts = [
+            'Giải',
+            'Gỉải',
+            'Giải',
+            'Lời giải chi tiết',
+            'Lời giải',
+            'Hướng dẫn giải',
+            'GỢI Ý LÀM BÀI',
+            'Trả lời',
+            'Phương pháp giải - Xem chi tiết',
+            'Hướng dẫn giải',
+            'Hướng dẫn',
+            'Đáp án chi tiết',
+            'Đáp án',
+            'BÀI THAM KHẢO',
+            'Bài Tham Khảo',
+            'Hướng dẫn trả lời'
+        ];
+
+        foreach ($remove_texts as $remove_text){
+            $content = preg_replace('/(<strong[^>]*>|^)\s*'.$remove_text.'\s*:?\s*<\/strong>/ui', '', $content);
+            $content = preg_replace('/(<b[^>]*>|^)\s*'.$remove_text.'\s*:?\s*<\/b>/ui', '', $content);
+        }
+
+        //loại javascript
+        $content = preg_replace('/<script[^>]*>.*?<\/script>/', '', $content);
+
+        //chuyển số mũ thành dạng latext
+
+        if(preg_match_all('/(?<=\s)([^\s>]+)\s*<sup\>([^<]+)<\/sup>/', $content, $matches)){
+            foreach ($matches[0] as $k => $value){
+                $co_so = $matches[1][$k];
+                $he_so = $matches[2][$k];
+
+                if($this->isValidSomu($co_so) && $this->isValidSomu($he_so)){
+                    $latex = "\($co_so^$he_so\)";
+                    $content = str_replace($value, $latex, $content);
+                }
+            }
+        }
+
+        if(preg_match_all('/(?<=\s)([^\s>]+)\s*<sub\>([^<]+)<\/sub>/', $content, $matches)){
+            foreach ($matches[0] as $k => $value){
+                $co_so = $matches[1][$k];
+                $he_so = $matches[2][$k];
+
+                if($this->isValidSomu($co_so) && $this->isValidSomu($he_so)){
+                    $latex = "\($co_so"."_$he_so\)";
+                    $content = str_replace($value, $latex, $content);
+                }
+            }
+        }
+
+        //loại text thừa đầu câu
+        $remove_texts2 = [
+            'Lời giải chi tiết',
+            'Lời giải',
+            'Hướng dẫn giải',
+            'GỢI Ý LÀM BÀI',
+            'Trả lời',
+            'Phương pháp giải - Xem chi tiết',
+            'Hướng dẫn giải',
+            'Hướng dẫn',
+            'Đáp án chi tiết',
+            'Đáp án',
+            'BÀI THAM KHẢO',
+            'Bài Tham Khảo',
+            'Hướng dẫn trả lời'
+        ];
+
+        foreach ($remove_texts2 as $remove_text){
+            $content = preg_replace('/^\s*'.$remove_text.'\s*:?\s*/ui', '', $content);
+        }
+
+        $content = preg_replace('/^\s*giải\s*:?\s*\\\n\s*/ui', '', $content);
+
+        $content = htmlspecialchars_decode($content);
+        $content = preg_replace('/(\s*\\\n\s*){2,}/', ' \n ', $content);
+        $content = preg_replace("/\s{2,}/", ' ', $content);
+        $content = str_ireplace("&nbsp;", ' ', $content);
+
+        //loại \n đầu câu
+        while (true){
+            $content = trim($content);
+
+            if(mb_strpos($content, '\n') === 0) $content = mb_substr($content, 2);
+            else break;
+        }
+
+        //loại \n cuối câu
+        while (true){
+            $content = trim($content);
+
+            if(mb_strrpos($content, '\n') === mb_strlen($content) - 2) $content = mb_substr($content, 0, mb_strlen($content) - 2);
+            else break;
+        }
+
+        $content = trim($content);
+
+        return $content;
+    }
+
     public function reverse($text)
     {
         $text = str_replace('<br />', '\n', $text);
@@ -37,12 +166,12 @@ class WebController extends Controller
         // $text = str_replace('\)span</span>', "\)", $text);
 
         //parse html table back to markdown
-        if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
-            foreach ($matches[0] as $table_html) {
-                $table_markdown = $this->htmlTableToMarkdown($table_html);
-                $text = str_replace($table_html, $table_markdown, $text);
-            }
-        }
+        // if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
+        //     foreach ($matches[0] as $table_html) {
+        //         $table_markdown = $this->htmlTableToMarkdown($table_html);
+        //         $text = str_replace($table_html, $table_markdown, $text);
+        //     }
+        // }
 
         $text = str_replace('&nbsp;\n', '\n', $text);
 
@@ -84,30 +213,30 @@ class WebController extends Controller
         $text = str_replace('media/', 'http://dev.data.giaingay.io/TestProject/public/media/', $text);
 
         // parse markdown table to html
-        $parser = new \cebe\markdown\MarkdownExtra();
-        if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
-            foreach ($matches[0] as $table_html) {
-                $html = $table_html;
-                $html = str_replace(['<table>', '</table>'], '', $html);
-                // preserve latex form after parse
-                $html = $this->escapeSlash($html);
-                $html = $parser->parse($html);
+        // $parser = new \cebe\markdown\MarkdownExtra();
+        // if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
+        //     foreach ($matches[0] as $table_html) {
+        //         $html = $table_html;
+        //         $html = str_replace(['<table>', '</table>'], '', $html);
+        //         // preserve latex form after parse
+        //         $html = $this->escapeSlash($html);
+        //         $html = $parser->parse($html);
 
-                if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
-                    foreach ($matches[0] as $j => $markdown_link) {
-                        $number = '![]' . $matches[1][$j];
-                        $image_html = '<img src="' . $matches[2][$j] . '"/>';
+        //         if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+        //             foreach ($matches[0] as $j => $markdown_link) {
+        //                 $number = '![]' . $matches[1][$j];
+        //                 $image_html = '<img src="' . $matches[2][$j] . '"/>';
 
-                        $html = str_replace($markdown_link, '', $html);
-                        $html = str_replace($number, $image_html, $html);
-                    }
-                }
+        //                 $html = str_replace($markdown_link, '', $html);
+        //                 $html = str_replace($number, $image_html, $html);
+        //             }
+        //         }
 
-                $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+        //         $html = str_replace("&lt;br/&gt;", "<br/>", $html);
 
-                $text = str_replace($table_html, $html, $text);
-            }
-        }
+        //         $text = str_replace($table_html, $html, $text);
+        //     }
+        // }
 
         //add span tag to display on mathjax
         // $text = str_replace("\(", '<span class="math-tex">\(', $text);
@@ -180,6 +309,8 @@ class WebController extends Controller
     {
         $post = Post::find($postId);
 
+        // $request->de_bai = $this->standard($this->reverse($request->de_bai));
+        // $request->dap_an = $this->standard($this->reverse($request->dap_an));
         $request->de_bai = $this->reverse($request->de_bai);
         $request->dap_an = $this->reverse($request->dap_an);
 
