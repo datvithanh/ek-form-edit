@@ -96,15 +96,15 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <div style="color: black;">
-                <div class="container">
-                    <div class="card-body">
+            <!-- <div style="color: black;"> -->
+                <!-- <div class="container"> -->
+                    <!-- <div class="card-body"> -->
                         <label style="font-weight: 700">Đề bài</label>
                         <br/>
                         {!!$post['de_bai_parsed']!!}
-                    </div>
-                </div>
-            </div>
+                    <!-- </div> -->
+                <!-- </div> -->
+            <!-- </div> -->
         </div>
         <div class="col-md-6">
             @if(count($post['ch_images']) > 0 )
@@ -133,15 +133,15 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div style="color: black;">
-                <div class="container">
-                    <div class="card-body">
+            <!-- <div style="color: black;"> -->
+                <!-- <div class="container"> -->
+                    <!-- <div class="card-body"> -->
                         <label style="font-weight: 700">Đáp án</label>
                         <br/>
                         {!!$post['dap_an_parsed']!!}
-                    </div>
-                </div>
-            </div>
+                    <!-- </div> -->
+                <!-- </div> -->
+            <!-- </div> -->
         </div>
         <div class="col-md-6">
             @if(count($post['da_images']) > 0 )
