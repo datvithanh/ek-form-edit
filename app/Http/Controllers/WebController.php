@@ -105,28 +105,28 @@ class WebController extends Controller
         // $text = str_replace("\)", '\)</span>', $text);
 
         // parse markdown table to html
-        $parser = new \cebe\markdown\MarkdownExtra();
-        if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
-            foreach ($matches[0] as $table_html) {
-                $html = $table_html;
-                $html = str_replace(['<table>', '</table>'], '', $html);
-                $html = $parser->parse($html);
+        // $parser = new \cebe\markdown\MarkdownExtra();
+        // if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
+        //     foreach ($matches[0] as $table_html) {
+        //         $html = $table_html;
+        //         $html = str_replace(['<table>', '</table>'], '', $html);
+        //         $html = $parser->parse($html);
 
-                if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
-                    foreach ($matches[0] as $j => $markdown_link) {
-                        $number = '![]' . $matches[1][$j];
-                        $image_html = '<img src="' . $matches[2][$j] . '"/>';
+        //         if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+        //             foreach ($matches[0] as $j => $markdown_link) {
+        //                 $number = '![]' . $matches[1][$j];
+        //                 $image_html = '<img src="' . $matches[2][$j] . '"/>';
 
-                        $html = str_replace($markdown_link, '', $html);
-                        $html = str_replace($number, $image_html, $html);
-                    }
-                }
+        //                 $html = str_replace($markdown_link, '', $html);
+        //                 $html = str_replace($number, $image_html, $html);
+        //             }
+        //         }
 
-                $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+        //         $html = str_replace("&lt;br/&gt;", "<br/>", $html);
 
-                $text = str_replace($table_html, $html, $text);
-            }
-        }
+        //         $text = str_replace($table_html, $html, $text);
+        //     }
+        // }
 
         $text = $this->brToEndlLatex($text);
         if (preg_match_all('/\s{2,}/', $text, $matches)) {
