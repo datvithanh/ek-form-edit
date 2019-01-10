@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="{{url('css/l5.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{url('assets/css/l5.css')}}" rel="stylesheet" type="text/css">
     <link href="{{url('assets/css/toastr.min.css')}}" rel="stylesheet" type="text/css">
     <style>
         #loader {
