@@ -10,11 +10,11 @@ use Carbon\Carbon;
 
 class WebController extends Controller
 {
-    public function standard($content){
+    public function standard($content)
+    {
         $content = str_replace("\r", ' ', $content);
         $content = str_replace("\t", ' ', $content);
         $content = str_replace(' ', ' ', $content);
-        // $content = str_replace('', ' ', $content);
 //        $content = str_replace("\n", ' ', $content);
         $content = str_replace("\xc2\xa0", ' ', $content);
         $content = str_replace("&#13;", ' ', $content);
@@ -56,9 +56,9 @@ class WebController extends Controller
             'Hướng dẫn trả lời'
         ];
 
-        foreach ($remove_texts as $remove_text){
-            $content = preg_replace('/(<strong[^>]*>|^)\s*'.$remove_text.'\s*:?\s*<\/strong>/ui', '', $content);
-            $content = preg_replace('/(<b[^>]*>|^)\s*'.$remove_text.'\s*:?\s*<\/b>/ui', '', $content);
+        foreach ($remove_texts as $remove_text) {
+            $content = preg_replace('/(<strong[^>]*>|^)\s*' . $remove_text . '\s*:?\s*<\/strong>/ui', '', $content);
+            $content = preg_replace('/(<b[^>]*>|^)\s*' . $remove_text . '\s*:?\s*<\/b>/ui', '', $content);
         }
 
         //loại javascript
@@ -66,25 +66,25 @@ class WebController extends Controller
 
         //chuyển số mũ thành dạng latext
 
-        if(preg_match_all('/(?<=\s)([^\s>]+)\s*<sup\>([^<]+)<\/sup>/', $content, $matches)){
-            foreach ($matches[0] as $k => $value){
+        if (preg_match_all('/(?<=\s)([^\s>]+)\s*<sup\>([^<]+)<\/sup>/', $content, $matches)) {
+            foreach ($matches[0] as $k => $value) {
                 $co_so = $matches[1][$k];
                 $he_so = $matches[2][$k];
 
-                if($this->isValidSomu($co_so) && $this->isValidSomu($he_so)){
+                if ($this->isValidSomu($co_so) && $this->isValidSomu($he_so)) {
                     $latex = "\($co_so^$he_so\)";
                     $content = str_replace($value, $latex, $content);
                 }
             }
         }
 
-        if(preg_match_all('/(?<=\s)([^\s>]+)\s*<sub\>([^<]+)<\/sub>/', $content, $matches)){
-            foreach ($matches[0] as $k => $value){
+        if (preg_match_all('/(?<=\s)([^\s>]+)\s*<sub\>([^<]+)<\/sub>/', $content, $matches)) {
+            foreach ($matches[0] as $k => $value) {
                 $co_so = $matches[1][$k];
                 $he_so = $matches[2][$k];
 
-                if($this->isValidSomu($co_so) && $this->isValidSomu($he_so)){
-                    $latex = "\($co_so"."_$he_so\)";
+                if ($this->isValidSomu($co_so) && $this->isValidSomu($he_so)) {
+                    $latex = "\($co_so" . "_$he_so\)";
                     $content = str_replace($value, $latex, $content);
                 }
             }
@@ -107,8 +107,8 @@ class WebController extends Controller
             'Hướng dẫn trả lời'
         ];
 
-        foreach ($remove_texts2 as $remove_text){
-            $content = preg_replace('/^\s*'.$remove_text.'\s*:?\s*/ui', '', $content);
+        foreach ($remove_texts2 as $remove_text) {
+            $content = preg_replace('/^\s*' . $remove_text . '\s*:?\s*/ui', '', $content);
         }
 
         $content = preg_replace('/^\s*giải\s*:?\s*\\\n\s*/ui', '', $content);
@@ -119,18 +119,18 @@ class WebController extends Controller
         $content = str_ireplace("&nbsp;", ' ', $content);
 
         //loại \n đầu câu
-        while (true){
+        while (true) {
             $content = trim($content);
 
-            if(mb_strpos($content, '\n') === 0) $content = mb_substr($content, 2);
+            if (mb_strpos($content, '\n') === 0) $content = mb_substr($content, 2);
             else break;
         }
 
         //loại \n cuối câu
-        while (true){
+        while (true) {
             $content = trim($content);
 
-            if(mb_strrpos($content, '\n') === mb_strlen($content) - 2) $content = mb_substr($content, 0, mb_strlen($content) - 2);
+            if (mb_strrpos($content, '\n') === mb_strlen($content) - 2) $content = mb_substr($content, 0, mb_strlen($content) - 2);
             else break;
         }
 
@@ -166,12 +166,12 @@ class WebController extends Controller
         // $text = str_replace('\)span</span>', "\)", $text);
 
         //parse html table back to markdown
-        // if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
-        //     foreach ($matches[0] as $table_html) {
-        //         $table_markdown = $this->htmlTableToMarkdown($table_html);
-        //         $text = str_replace($table_html, $table_markdown, $text);
-        //     }
-        // }
+        if (preg_match_all('/<table(.*)>(.|\||\s)*?<\/table>/', $text, $matches)) {
+            foreach ($matches[0] as $table_html) {
+                $table_markdown = $this->htmlTableToMarkdown($table_html);
+                $text = str_replace($table_html, $table_markdown, $text);
+            }
+        }
 
         $text = str_replace('&nbsp;\n', '\n', $text);
 
@@ -213,30 +213,30 @@ class WebController extends Controller
         $text = str_replace('media/', 'http://dev.data.giaingay.io/TestProject/public/media/', $text);
 
         // parse markdown table to html
-        // $parser = new \cebe\markdown\MarkdownExtra();
-        // if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
-        //     foreach ($matches[0] as $table_html) {
-        //         $html = $table_html;
-        //         $html = str_replace(['<table>', '</table>'], '', $html);
-        //         // preserve latex form after parse
-        //         $html = $this->escapeSlash($html);
-        //         $html = $parser->parse($html);
+        $parser = new \cebe\markdown\MarkdownExtra();
+        if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
+            foreach ($matches[0] as $table_html) {
+                $html = $table_html;
+                $html = str_replace(['<table>', '</table>'], '', $html);
+                // preserve latex form after parse
+                $html = $this->escapeSlash($html);
+                $html = $parser->parse($html);
 
-        //         if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
-        //             foreach ($matches[0] as $j => $markdown_link) {
-        //                 $number = '![]' . $matches[1][$j];
-        //                 $image_html = '<img src="' . $matches[2][$j] . '"/>';
+                if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+                    foreach ($matches[0] as $j => $markdown_link) {
+                        $number = '![]' . $matches[1][$j];
+                        $image_html = '<img src="' . $matches[2][$j] . '"/>';
 
-        //                 $html = str_replace($markdown_link, '', $html);
-        //                 $html = str_replace($number, $image_html, $html);
-        //             }
-        //         }
+                        $html = str_replace($markdown_link, '', $html);
+                        $html = str_replace($number, $image_html, $html);
+                    }
+                }
 
-        //         $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+                $html = str_replace("&lt;br/&gt;", "<br/>", $html);
 
-        //         $text = str_replace($table_html, $html, $text);
-        //     }
-        // }
+                $text = str_replace($table_html, $html, $text);
+            }
+        }
 
         //add span tag to display on mathjax
         // $text = str_replace("\(", '<span class="math-tex">\(', $text);
@@ -309,10 +309,8 @@ class WebController extends Controller
     {
         $post = Post::find($postId);
 
-        // $request->de_bai = $this->standard($this->reverse($request->de_bai));
-        // $request->dap_an = $this->standard($this->reverse($request->dap_an));
-        $request->de_bai = $this->reverse($request->de_bai);
-        $request->dap_an = $this->reverse($request->dap_an);
+        $request->de_bai = $this->standard($this->reverse($request->de_bai));
+        $request->dap_an = $this->standard($this->reverse($request->dap_an));
 
         $count = PostHistory::where('post_id', $postId)->count();
         if ($count == 6) {
@@ -463,7 +461,8 @@ class WebController extends Controller
         return $next;
     }
 
-    public function htmlTableToMarkdown($text) {
+    public function htmlTableToMarkdown($text)
+    {
         if (preg_match_all('/<tr>(.|\||\s)*?<\/tr>/', $text, $matches)) {
             $array = [];
             foreach ($matches[0] as $trtag) {
@@ -479,7 +478,7 @@ class WebController extends Controller
                     array_push($array, $item_matches[0]);
                 }
             }
-
+            // dd($array);
             $th = true;
             $col_width = [];
             for ($i = 0; $i < count($array[0]); ++$i) {
@@ -504,9 +503,12 @@ class WebController extends Controller
                         $separator .= ' | ';
                     }
                 }
-                if ($i != count($array) - 1) {
+                if ($i == 0) {
                     $table .= PHP_EOL;
                     $table .= $separator . PHP_EOL;
+                }
+                else if ($i != count($array) - 1) {
+                    $table .= PHP_EOL;
                 }
             }
             $table .= '</table>';
@@ -517,74 +519,5 @@ class WebController extends Controller
 
     public function test()
     {
-        $text = $this->reverse('a) Tìm tọa độ điểm A thông qua hoành độ của điểm A, và thuộc đường thẳng (d)<br />
-        c) Dựa vào đồ thị ta xác định tọa độ giao điểm thứ hai của (P) và (d)<br />
-        Đồ thị hàm số (P) cắt đường thẳng (d): y = 3x – 4 tại điểm A có hoành độ bằng -2 nên ta có : \(y = 3.\left( { - 2} \right) - 4 = - 10 \Rightarrow A\left( { - 2; - 10} \right)\)<br />
-        Điểm A thuộc đồ thị hàm số (P) \(y = a{x^2}\,\,\left( {a \ne 0} \right) \Rightarrow - 10 = a.{\left( { - 2} \right)^2}\)\(\, \Rightarrow a = \dfrac{{ - 5}}{2}\)<br />
-        Vậy hàm số cần tìm có dạng: \(y = - \dfrac{5}{2}{x^2}\)<br />
-        b) Bảng giá trị
-        <table>
-            <thead>
-                <tr>
-                    <th>\(x\)</th>
-                    <th>\( - 2\)</th>
-                    <th>\( - 1\)</th>
-                    <th>0</th>
-                    <th>1</th>
-                    <th>2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>\(y = - \dfrac{5}{2}{x^2}\)</td>
-                    <td>\( - 10\)</td>
-                    <td>\( - \dfrac{5}{2}\)</td>
-                    <td>0</td>
-                    <td>\( - \dfrac{5}{2}\)</td>
-                    <td>\( - 10\)</td>
-                </tr>
-                <tr>
-                    <td>\(y = 3x - 4\)</td>
-                    <td> </td>
-                    <td> </td>
-                    <td>\( - 4\)</td>
-                    <td>\( - 1\)</td>
-                    <td> </td>
-                </tr>
-            </tbody>
-        </table>
-          <br />
-        Vậy đồ thị hàm số \(y = - \dfrac{5}{2}{x^2}\)là 1 Parabol đi qua các điểm có tọa độ là \(\left( { - 2; - 10} \right);\left( { - 1; - \dfrac{5}{2}} \right);\left( {0;0} \right);\)\(\,\left( {1; - \dfrac{5}{2}} \right);\left( {2; - 10} \right)\)<br />
-        Đồ thị hàm số \(y = 3x - 4\) là 1 đường thẳng đi qua các điểm có tọa độ là \(\left( {0; - 4} \right);\left( {1; - 1} \right)\)<br />
-        <img src="http://dev.data.giaingay.io/TestProject/public/media/Solutions/9lX2dyqPw5c1b5cb6e983e9.97490653/TopkidMP4rcf.jpg" /><br />
-        c) Bằng đồ thị, hãy xác định tọa độ giao điểm thứ hai của (P) và (d) vừa vẽ ở câu b.<br />
-        Tọa độ giao điểm thứ hai của (P) và (d) là: \(\left( {\dfrac{4}{5};\dfrac{{ - 8}}{5}} \right)\)');
-        dd($text);
-        $text = '<table>
-        <thead>
-            <tr>
-                <th>\(x\)</th>
-                <th>\( - 4\)</th>
-                <th>\( - 2\)</th>
-                <th>0</th>
-                <th>2</th>
-                <th>4</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>\(y = - \dfrac{1}{4}{x^2}\)</td>
-                <td>\( - 4\)</td>
-                <td>\( - 1\)</td>
-                <td>0</td>
-                <td>\( - 1\)</td>
-                <td>\( - 4\)</td>
-            </tr>
-        </tbody>
-    </table>';
-        dd($this->htmlTableToMarkdown($text));
     }
-    // | \(x\)\n | \( - 4\)\n | \( - 2\)\n | 0\n | 2\n | 4\n |
-    // | ----------------------------- | ---------- | ---------- | --- | ---------- | ---------- |
-    // | \(y = - \dfrac{1}{4}{x^2}\)\n | \( - 4\)\n | \( - 1\)\n | 0\n | \( - 1\)\n | \( - 4\)\n |
 }
