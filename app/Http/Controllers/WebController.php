@@ -162,8 +162,8 @@ class WebController extends Controller
         // }
 
         //strip span tag
-        // $text = str_replace('< class="math-tex">\(', "\(", $text);
-        // $text = str_replace('\)span</span>', "\)", $text);
+        $text = str_replace('< class="math-tex">\(', "\(", $text);
+        $text = str_replace('\)span</span>', "\)", $text);
 
         //parse html table back to markdown
         if (preg_match_all('/<table(.*)>(.|\||\s)*?<\/table>/', $text, $matches)) {
@@ -239,8 +239,8 @@ class WebController extends Controller
         }
 
         //add span tag to display on mathjax
-        // $text = str_replace("\(", '<span class="math-tex">\(', $text);
-        // $text = str_replace("\)", '\)</span>', $text);
+        $text = str_replace("\(", '<span class="math-tex">\(', $text);
+        $text = str_replace("\)", '\)</span>', $text);
 
         $text = $this->brToEndlLatex($text);
         if (preg_match_all('/\s{2,}/', $text, $matches)) {
@@ -506,8 +506,7 @@ class WebController extends Controller
                 if ($i == 0) {
                     $table .= PHP_EOL;
                     $table .= $separator . PHP_EOL;
-                }
-                else if ($i != count($array) - 1) {
+                } else if ($i != count($array) - 1) {
                     $table .= PHP_EOL;
                 }
             }
@@ -519,5 +518,33 @@ class WebController extends Controller
 
     public function test()
     {
+        $text = '<table>| \(R\)\n | \(d\)\n | Vị trí tương đối của đường thẳng và đường tròn\n |
+| ----------------------------- | ----------------------- | ------------------------------------------------ |
+| \(5cm\)\n \(6cm\)\n \(4cm\)\n | \(3cm\)\n …\n \(7cm\)\n | …\n Tiếp xúc nhau\n …\n \n |</table>';
+        $parser = new \cebe\markdown\MarkdownExtra();
+        if (preg_match_all('/<table>(.|\||\s)*?<\/table>/', $text, $matches)) {
+            foreach ($matches[0] as $table_html) {
+                $html = $table_html;
+                $html = str_replace(['<table>', '</table>'], '', $html);
+                // preserve latex form after parse
+                $html = $this->escapeSlash($html);
+                $html = $parser->parse($html);
+
+                if (preg_match_all('/(\[\d+\]):\s*([^\[\<]+)/', $html, $matches)) {
+                    foreach ($matches[0] as $j => $markdown_link) {
+                        $number = '![]' . $matches[1][$j];
+                        $image_html = '<img src="' . $matches[2][$j] . '"/>';
+
+                        $html = str_replace($markdown_link, '', $html);
+                        $html = str_replace($number, $image_html, $html);
+                    }
+                }
+
+                $html = str_replace("&lt;br/&gt;", "<br/>", $html);
+
+                $text = str_replace($table_html, $html, $text);
+            }
+        }
+        dd($text);
     }
 }
